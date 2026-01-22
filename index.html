@@ -8,6 +8,7 @@
     <!-- External Libraries -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     
     <style>
         :root {
@@ -1160,6 +1161,49 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- History View -->
+                <div id="view-history" class="view">
+                    <div class="card">
+                        <h3>Report History</h3>
+                        <div class="table-wrapper">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Period</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="historyTableBody">
+                                    <!-- Data loaded dynamically -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Settings View -->
+                <div id="view-settings" class="view">
+                    <div class="card">
+                        <h3>Dashboard Settings</h3>
+                        <div class="form-group">
+                            <label for="autoSaveInterval">Auto-save Interval (seconds)</label>
+                            <input type="number" id="autoSaveInterval" class="form-control" value="5" min="1" max="60">
+                        </div>
+                        <div class="form-group">
+                            <label for="defaultPeriod">Default Period</label>
+                            <select id="defaultPeriod" class="form-control">
+                                <option value="21-days">21 Days</option>
+                                <option value="monthly">Monthly</option>
+                                <option value="custom">Custom Range</option>
+                                <option value="all">All Data</option>
+                            </select>
+                        </div>
+                        <button class="btn btn-primary" onclick="AgentDashboard.saveSettings()">Save Settings</button>
+                    </div>
+                </div>
             </div>
         </main>
     </div>
@@ -1197,22 +1241,25 @@
             chart: null,
             analyticsChart: null,
             upsellChart: null,
+            autoSaveTimer: null,
 
             // Initialize
             init: function() {
                 this.loadFromStorage();
+                this.loadSettings();
                 this.setupEventListeners();
                 this.renderAgentTable();
                 this.renderUpsellTable();
                 this.updateKPIs();
                 this.renderCharts();
                 this.updateVersionInfo();
+                this.renderHistory();
             },
 
             // Setup Event Listeners
             setupEventListeners: function() {
                 // Auto-save on changes
-                setInterval(() => {
+                this.autoSaveTimer = setInterval(() => {
                     if (this.isDirty) {
                         this.saveToStorage();
                         this.isDirty = false;
@@ -1221,28 +1268,30 @@
 
                 // Drag and drop for upload
                 const uploadArea = document.getElementById('uploadArea');
-                uploadArea.addEventListener('dragover', (e) => {
-                    e.preventDefault();
-                    uploadArea.style.borderColor = 'var(--primary)';
-                    uploadArea.style.background = '#f0f8ff';
-                });
+                if (uploadArea) {
+                    uploadArea.addEventListener('dragover', (e) => {
+                        e.preventDefault();
+                        uploadArea.style.borderColor = 'var(--primary)';
+                        uploadArea.style.background = '#f0f8ff';
+                    });
 
-                uploadArea.addEventListener('dragleave', (e) => {
-                    e.preventDefault();
-                    uploadArea.style.borderColor = 'var(--border)';
-                    uploadArea.style.background = 'white';
-                });
+                    uploadArea.addEventListener('dragleave', (e) => {
+                        e.preventDefault();
+                        uploadArea.style.borderColor = 'var(--border)';
+                        uploadArea.style.background = 'white';
+                    });
 
-                uploadArea.addEventListener('drop', (e) => {
-                    e.preventDefault();
-                    uploadArea.style.borderColor = 'var(--border)';
-                    uploadArea.style.background = 'white';
-                    
-                    const files = e.dataTransfer.files;
-                    if (files.length > 0) {
-                        this.handleFileUpload({ target: { files: files } });
-                    }
-                });
+                    uploadArea.addEventListener('drop', (e) => {
+                        e.preventDefault();
+                        uploadArea.style.borderColor = 'var(--border)';
+                        uploadArea.style.background = 'white';
+                        
+                        const files = e.dataTransfer.files;
+                        if (files.length > 0) {
+                            this.handleFileUpload({ target: { files: files } });
+                        }
+                    });
+                }
             },
 
             // View Management
@@ -1278,6 +1327,8 @@
                     this.renderAnalytics();
                 } else if (view === 'upsell') {
                     this.renderUpsellChart();
+                } else if (view === 'history') {
+                    this.renderHistory();
                 }
             },
 
@@ -1564,6 +1615,41 @@
                 if (upsellRate >= 35) return 'high';
                 if (upsellRate >= 25) return 'medium';
                 return 'low';
+            },
+
+            // Parse Time to Seconds
+            parseTimeToSeconds: function(timeStr) {
+                if (!timeStr) return 0;
+                
+                const parts = timeStr.split(':').map(Number);
+                
+                if (parts.length === 1) {
+                    // Just seconds
+                    return parts[0] || 0;
+                } else if (parts.length === 2) {
+                    // Minutes:Seconds
+                    return (parts[0] * 60) + (parts[1] || 0);
+                } else if (parts.length === 3) {
+                    // Hours:Minutes:Seconds
+                    return (parts[0] * 3600) + (parts[1] * 60) + (parts[2] || 0);
+                }
+                
+                return 0;
+            },
+
+            // Seconds to Time String
+            secondsToTimeString: function(seconds) {
+                if (!seconds || seconds <= 0) return '0:00';
+                
+                const hours = Math.floor(seconds / 3600);
+                const minutes = Math.floor((seconds % 3600) / 60);
+                const secs = Math.floor(seconds % 60);
+                
+                if (hours > 0) {
+                    return `${hours}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+                } else {
+                    return `${minutes}:${secs.toString().padStart(2, '0')}`;
+                }
             },
 
             // Render Agent Table
@@ -1875,7 +1961,10 @@
             // Render Charts
             renderCharts: function() {
                 const ctx = document.getElementById('performanceChart');
-                if (!ctx) return;
+                if (!ctx) {
+                    console.warn('Performance chart canvas not found');
+                    return;
+                }
 
                 const filteredAgents = this.agents.filter(agent => 
                     this.currentPeriod === 'all' || agent.period === this.currentPeriod
@@ -1974,7 +2063,10 @@
             // Render Upsell Chart
             renderUpsellChart: function() {
                 const ctx = document.getElementById('upsellChart');
-                if (!ctx) return;
+                if (!ctx) {
+                    console.warn('Upsell chart canvas not found');
+                    return;
+                }
 
                 const filteredAgents = this.agents.filter(agent => 
                     this.currentPeriod === 'all' || agent.period === this.currentPeriod
@@ -2061,7 +2153,10 @@
             // Render Analytics
             renderAnalytics: function() {
                 const ctx = document.getElementById('analyticsChart');
-                if (!ctx) return;
+                if (!ctx) {
+                    console.warn('Analytics chart canvas not found');
+                    return;
+                }
 
                 // Destroy existing chart
                 if (this.analyticsChart) {
@@ -2283,55 +2378,91 @@
                 }
 
                 // Process file
-                setTimeout(() => {
-                    this.processExcelFile(file);
-                }, 1000);
+                this.processExcelFile(file);
             },
 
             // Process Excel File
             processExcelFile: function(file) {
-                // For demo purposes, we'll simulate processing
-                // In a real implementation, you would use a library like SheetJS
+                const reader = new FileReader();
                 
-                this.showToast(`Processing ${file.name}...`, 'info');
+                reader.onload = (e) => {
+                    try {
+                        const data = new Uint8Array(e.target.result);
+                        const workbook = XLSX.read(data, { type: 'array' });
+                        const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+                        const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+                        
+                        this.processUploadedData(jsonData);
+                    } catch (error) {
+                        console.error('Error reading file:', error);
+                        this.showToast('Error reading file. Please check the format.', 'error');
+                        this.showLoading(false);
+                    }
+                };
                 
-                // Simulate successful processing
-                setTimeout(() => {
-                    this.showLoading(false);
+                reader.readAsArrayBuffer(file);
+            },
+
+            // Process Uploaded Data
+            processUploadedData: function(data) {
+                try {
+                    // Skip header row
+                    const rows = data.slice(1);
                     
-                    // Update with new data (in real implementation, parse the file)
-                    const newAgents = [
-                        {
-                            id: this.agents.length + 1,
-                            agentId: '208',
-                            name: 'New Agent',
-                            totalRings: 1500,
-                            answered: 800,
-                            missed: 700,
-                            avgWait: '0:06',
-                            maxWait: '1:45',
-                            avgTalk: '1:35',
-                            totalTalk: '21:15:00',
-                            orders: 120,
-                            sales: 15000,
-                            target: 18000,
-                            upsellAttempts: 150,
-                            upsellSuccess: 45,
-                            upsellRevenue: 1350,
-                            period: this.currentPeriod
-                        },
-                        ...this.agents
-                    ];
+                    rows.forEach((row, index) => {
+                        if (row.length >= 13) {
+                            const agentStr = row[0]?.toString() || '';
+                            const agentMatch = agentStr.match(/(\d+)\s*–\s*(.+)/);
+                            
+                            if (agentMatch) {
+                                const agentCode = agentMatch[1];
+                                const agentName = agentMatch[2].trim();
+                                
+                                // Find or create agent
+                                let agent = this.agents.find(a => a.agentId === agentCode);
+                                if (!agent) {
+                                    agent = {
+                                        id: this.agents.length + 1,
+                                        agentId: agentCode,
+                                        name: agentName,
+                                        period: this.currentPeriod
+                                    };
+                                    this.agents.push(agent);
+                                }
+                                
+                                // Update agent data
+                                agent.totalRings = parseInt(row[1]) || 0;
+                                agent.answered = parseInt(row[2]) || 0;
+                                agent.missed = parseInt(row[3]) || 0;
+                                agent.avgWait = row[4]?.toString() || '0:00';
+                                agent.maxWait = row[5]?.toString() || '0:00';
+                                agent.avgTalk = row[6]?.toString() || '0:00';
+                                agent.totalTalk = row[7]?.toString() || '0:00:00';
+                                agent.orders = parseInt(row[8]) || 0;
+                                agent.sales = parseFloat(row[9]) || 0;
+                                agent.target = parseFloat(row[10]) || 0;
+                                agent.upsellAttempts = parseInt(row[11]) || 0;
+                                agent.upsellSuccess = parseInt(row[12]) || 0;
+                                
+                                // Calculate derived values
+                                agent.upsellRevenue = agent.upsellSuccess * 30; // Average of $30 per successful upsell
+                            }
+                        }
+                    });
                     
-                    this.agents = newAgents;
+                    this.saveToStorage();
                     this.renderAgentTable();
                     this.renderUpsellTable();
                     this.updateKPIs();
                     this.renderCharts();
+                    this.showLoading(false);
+                    this.showToast(`Successfully uploaded ${rows.length} records!`, 'success');
                     
-                    this.showToast('File uploaded and processed successfully!', 'success');
-                    this.isDirty = true;
-                }, 2000);
+                } catch (error) {
+                    console.error('Error processing data:', error);
+                    this.showLoading(false);
+                    this.showToast('Error processing file data. Please check the format.', 'error');
+                }
             },
 
             // Download Template
@@ -2359,6 +2490,23 @@
             finalizeReport: function() {
                 this.versionStatus = 'final';
                 this.updateVersionInfo();
+                
+                // Add to history
+                try {
+                    const history = JSON.parse(localStorage.getItem('reportHistory')) || [];
+                    history.push({
+                        id: 'report_' + Date.now(),
+                        date: new Date().toISOString(),
+                        period: this.currentPeriod,
+                        status: 'final',
+                        data: this.agents
+                    });
+                    localStorage.setItem('reportHistory', JSON.stringify(history));
+                } catch (error) {
+                    console.error('Error saving to history:', error);
+                }
+                
+                this.saveToStorage();
                 this.showToast('Report finalized! Changes are now locked.', 'success');
             },
 
@@ -2458,8 +2606,10 @@
                         versionStatus: this.versionStatus,
                         lastUpdated: new Date().toISOString()
                     }));
+                    console.log('Data saved to storage');
                 } catch (e) {
                     console.error('Error saving data:', e);
+                    this.showToast('Error saving data: ' + e.message, 'error');
                 }
             },
 
@@ -2477,8 +2627,113 @@
                     }
                 } catch (e) {
                     console.error('Error loading data:', e);
+                    this.showToast('Error loading data: ' + e.message, 'error');
                     this.loadSampleData();
                 }
+            },
+
+            // Settings Management
+            saveSettings: function() {
+                const autoSaveInterval = document.getElementById('autoSaveInterval').value;
+                const defaultPeriod = document.getElementById('defaultPeriod').value;
+                
+                // Save settings to localStorage
+                localStorage.setItem('dashboardSettings', JSON.stringify({
+                    autoSaveInterval: autoSaveInterval,
+                    defaultPeriod: defaultPeriod
+                }));
+                
+                // Update auto-save interval
+                if (this.autoSaveTimer) {
+                    clearInterval(this.autoSaveTimer);
+                }
+                
+                this.autoSaveTimer = setInterval(() => {
+                    if (this.isDirty) {
+                        this.saveToStorage();
+                        this.isDirty = false;
+                    }
+                }, autoSaveInterval * 1000);
+                
+                this.showToast('Settings saved successfully!');
+            },
+
+            loadSettings: function() {
+                try {
+                    const settings = JSON.parse(localStorage.getItem('dashboardSettings'));
+                    if (settings) {
+                        document.getElementById('autoSaveInterval').value = settings.autoSaveInterval || 5;
+                        document.getElementById('defaultPeriod').value = settings.defaultPeriod || '21-days';
+                        
+                        // Update auto-save interval
+                        if (this.autoSaveTimer) {
+                            clearInterval(this.autoSaveTimer);
+                        }
+                        
+                        this.autoSaveTimer = setInterval(() => {
+                            if (this.isDirty) {
+                                this.saveToStorage();
+                                this.isDirty = false;
+                            }
+                        }, settings.autoSaveInterval * 1000 || 5000);
+                    }
+                } catch (error) {
+                    console.error('Error loading settings:', error);
+                }
+            },
+
+            // Render History
+            renderHistory: function() {
+                const tbody = document.getElementById('historyTableBody');
+                if (!tbody) return;
+                
+                // Load history from localStorage
+                try {
+                    const history = JSON.parse(localStorage.getItem('reportHistory')) || [];
+                    
+                    if (history.length === 0) {
+                        tbody.innerHTML = `
+                            <tr>
+                                <td colspan="4" style="padding: 40px; text-align: center; color: var(--text-muted);">
+                                    No report history available
+                                </td>
+                            </tr>
+                        `;
+                        return;
+                    }
+                    
+                    tbody.innerHTML = history.map(report => `
+                        <tr>
+                            <td>${new Date(report.date).toLocaleDateString()}</td>
+                            <td>${report.period}</td>
+                            <td>
+                                <span class="version-badge version-${report.status}">
+                                    ${report.status.toUpperCase()}
+                                </span>
+                            </td>
+                            <td>
+                                <button class="btn btn-sm btn-secondary" onclick="AgentDashboard.viewReport('${report.id}')">
+                                    View
+                                </button>
+                            </td>
+                        </tr>
+                    `).join('');
+                } catch (error) {
+                    console.error('Error loading history:', error);
+                    tbody.innerHTML = `
+                        <tr>
+                            <td colspan="4" style="padding: 40px; text-align: center; color: var(--text-muted);">
+                                Error loading report history
+                            </td>
+                        </tr>
+                    `;
+                }
+            },
+
+            // View Report
+            viewReport: function(reportId) {
+                // In a full implementation, this would load and display the specific report
+                this.showToast(`Viewing report ${reportId}`);
             }
         };
 
