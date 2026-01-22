@@ -3,17 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CRISPY | Agent Performance Dashboard</title>
+    <title>Crispy Chicken | Agent Performance Dashboard</title>
     
     <!-- External Libraries -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
-    
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/moment/moment.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     
     <style>
         :root {
@@ -53,7 +47,6 @@
             overflow: hidden;
         }
 
-        /* Main Layout */
         .app-container {
             display: flex;
             height: 100vh;
@@ -62,15 +55,14 @@
         /* Sidebar */
         .sidebar {
             width: 240px;
-            background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%);
+            background: #1e1e2d;
             color: white;
             display: flex;
             flex-direction: column;
-            border-right: 1px solid rgba(255, 255, 255, 0.1);
-            z-index: 100;
+            border-right: 1px solid #333;
+            z-index: 20;
             flex-shrink: 0;
             transition: all 0.3s ease;
-            position: relative;
         }
 
         .brand {
@@ -81,24 +73,10 @@
             font-weight: 800;
             font-size: 1.1rem;
             letter-spacing: 0.5px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .brand::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            right: 0;
-            width: 100px;
-            height: 100px;
-            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1));
-            transform: translate(30px, -30px);
         }
 
         .brand i {
             margin-right: 10px;
-            font-size: 1.4rem;
         }
 
         .brand span {
@@ -117,32 +95,25 @@
         .nav-item {
             padding: 12px 15px;
             cursor: pointer;
-            color: rgba(255,255,255,0.7);
+            color: rgba(255,255,255,0.6);
             display: flex;
             align-items: center;
             gap: 12px;
-            border-radius: 8px;
+            border-radius: 6px;
             transition: all 0.2s;
             font-size: 0.9rem;
-            position: relative;
-            overflow: hidden;
         }
 
         .nav-item:hover {
             background: rgba(255,255,255,0.05);
             color: white;
-            transform: translateX(5px);
         }
 
         .nav-item.active {
-            background: linear-gradient(90deg, rgba(211, 47, 47, 0.2), rgba(211, 47, 47, 0.1));
+            background: var(--primary);
             color: white;
             font-weight: 600;
-        }
-
-        .nav-item i {
-            width: 20px;
-            text-align: center;
+            box-shadow: 0 4px 10px rgba(211, 47, 47, 0.4);
         }
 
         /* Main Content */
@@ -154,7 +125,7 @@
         }
 
         .top-bar {
-            background: var(--bg-panel);
+            background: white;
             padding: 15px 25px;
             border-bottom: 1px solid var(--border);
             display: flex;
@@ -162,20 +133,17 @@
             align-items: center;
             z-index: 10;
             box-shadow: var(--shadow);
-            flex-wrap: wrap;
-            gap: 15px;
         }
 
-        .page-header h1 {
-            font-size: 1.5rem;
-            font-weight: 700;
+        .page-header h2 {
+            font-size: 1.4rem;
             color: var(--text-main);
-            margin-bottom: 4px;
         }
 
         .page-header p {
-            font-size: 0.875rem;
+            font-size: 0.85rem;
             color: var(--text-muted);
+            margin-top: 2px;
         }
 
         .controls {
@@ -195,8 +163,7 @@
             align-items: center;
             gap: 8px;
             font-size: 0.9rem;
-            transition: all 0.2s;
-            text-decoration: none;
+            transition: 0.2s;
         }
 
         .btn-primary {
@@ -206,28 +173,16 @@
 
         .btn-primary:hover {
             background: var(--primary-dark);
-            transform: translateY(-1px);
-            box-shadow: var(--shadow);
         }
 
         .btn-secondary {
-            background: var(--bg-panel);
-            color: var(--text-main);
-            border: 1px solid var(--border);
-        }
-
-        .btn-secondary:hover {
-            background: #f8f9fa;
-            transform: translateY(-1px);
+            background: white;
+            border: 1px solid #ddd;
+            color: #555;
         }
 
         .btn-success {
             background: var(--success);
-            color: white;
-        }
-
-        .btn-danger {
-            background: var(--danger);
             color: white;
         }
 
@@ -236,14 +191,14 @@
             color: white;
         }
 
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+
         .btn-sm {
             padding: 6px 12px;
             font-size: 0.8rem;
-        }
-
-        .btn-group {
-            display: flex;
-            gap: 8px;
         }
 
         .view-container {
@@ -254,24 +209,24 @@
 
         .view {
             display: none;
-            animation: fadeIn 0.4s ease;
         }
 
         .view.active {
             display: block;
+            animation: fadeIn 0.4s ease;
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
 
         /* Card Styles */
         .card {
-            background: var(--bg-panel);
+            background: white;
             border-radius: 12px;
             box-shadow: var(--shadow);
-            padding: 24px;
+            padding: 20px;
             margin-bottom: 20px;
             border: 1px solid var(--border);
             transition: all 0.3s ease;
@@ -281,32 +236,18 @@
             box-shadow: var(--shadow-lg);
         }
 
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .card-title {
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: var(--text-main);
-            margin: 0;
-        }
-
         /* KPI Grid */
         .kpi-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 20px;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
         }
 
         .kpi-card {
-            background: var(--bg-panel);
-            padding: 24px;
-            border-radius: 12px;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
             box-shadow: var(--shadow);
             border-left: 4px solid var(--primary);
             transition: all 0.3s ease;
@@ -326,30 +267,45 @@
             text-transform: uppercase;
             letter-spacing: 1px;
             font-weight: 700;
-            margin-bottom: 8px;
         }
 
         .kpi-value {
             font-size: 1.8rem;
             font-weight: 800;
             color: var(--text-main);
-            margin-bottom: 8px;
-            line-height: 1.2;
+            margin-top: 5px;
         }
 
         .kpi-change {
             font-size: 0.8rem;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        .kpi-change.positive {
             color: var(--success);
+            margin-top: 5px;
         }
 
-        .kpi-change.negative {
-            color: var(--danger);
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 0.9rem;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(211, 47, 47, 0.2);
         }
 
         /* Table Styles */
@@ -372,7 +328,7 @@
             color: var(--text-muted);
             font-weight: 700;
             text-align: center;
-            padding: 14px 12px;
+            padding: 12px 8px;
             border-bottom: 2px solid var(--border);
             white-space: nowrap;
             text-transform: uppercase;
@@ -384,14 +340,10 @@
         }
 
         td {
-            padding: 12px;
+            padding: 10px 8px;
             border-bottom: 1px solid #eee;
             text-align: center;
             vertical-align: middle;
-        }
-
-        tbody tr {
-            transition: all 0.2s;
         }
 
         tbody tr:hover {
@@ -403,8 +355,6 @@
             position: relative;
             cursor: pointer;
             transition: all 0.2s;
-            padding: 8px;
-            border-radius: 4px;
         }
 
         .editable-cell:hover {
@@ -452,13 +402,12 @@
             background-color: var(--danger);
         }
 
-        .rate-badge {
+        .answer-rate-badge {
             padding: 4px 8px;
             border-radius: 4px;
             font-size: 0.75rem;
             font-weight: 700;
             display: inline-block;
-            min-width: 70px;
         }
 
         .rate-high {
@@ -476,101 +425,28 @@
             color: var(--danger);
         }
 
-        /* Chart Container */
-        .chart-container {
-            position: relative;
-            height: 350px;
-            margin-bottom: 20px;
-        }
-
-        /* Modal */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
-            backdrop-filter: blur(3px);
-            animation: fadeIn 0.3s ease;
-        }
-
-        .modal.show {
-            display: flex;
-        }
-
-        .modal-content {
-            background: var(--bg-panel);
-            padding: 30px;
-            border-radius: 12px;
-            width: 100%;
-            max-width: 600px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
-            animation: slideUp 0.3s ease;
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-
-        @keyframes slideUp {
-            from { transform: translateY(30px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-
-        /* Toast */
-        .toast {
-            position: fixed;
-            bottom: 25px;
-            right: 25px;
-            background: var(--dark);
-            color: white;
-            padding: 15px 25px;
-            border-radius: 6px;
-            z-index: 2000;
-            transform: translateY(100px);
-            transition: transform 0.3s ease;
-            box-shadow: var(--shadow-lg);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            max-width: 400px;
-        }
-
-        .toast.show {
-            transform: translateY(0);
-        }
-
-        /* Form Controls */
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-label {
-            display: block;
-            font-size: 0.85rem;
+        /* Achievement Badge */
+        .achievement-badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
             font-weight: 700;
-            margin-bottom: 8px;
-            color: var(--text-main);
+            display: inline-block;
         }
 
-        .form-control {
-            width: 100%;
-            padding: 12px 15px;
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            font-size: 0.95rem;
-            transition: all 0.2s;
-            background: var(--bg-panel);
-            color: var(--text-main);
+        .achievement-high {
+            background: var(--success-light);
+            color: var(--success);
         }
 
-        .form-control:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(211, 47, 47, 0.1);
+        .achievement-medium {
+            background: var(--warning-light);
+            color: var(--warning);
+        }
+
+        .achievement-low {
+            background: var(--danger-light);
+            color: var(--danger);
         }
 
         /* Period Selector */
@@ -603,7 +479,15 @@
             border-color: var(--primary);
         }
 
-        /* Upload Area */
+        /* Upload Section */
+        .upload-section {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+        }
+
         .upload-area {
             border: 2px dashed var(--border);
             border-radius: 8px;
@@ -611,7 +495,6 @@
             text-align: center;
             cursor: pointer;
             transition: all 0.3s;
-            margin-bottom: 20px;
         }
 
         .upload-area:hover {
@@ -625,26 +508,103 @@
             margin-bottom: 15px;
         }
 
-        /* Status Badges */
-        .status-badge {
+        .upload-area p {
+            color: var(--text-muted);
+            margin-bottom: 10px;
+        }
+
+        /* Version Control */
+        .version-control {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+        }
+
+        .version-badge {
             padding: 6px 12px;
             border-radius: 20px;
             font-size: 0.8rem;
             font-weight: 600;
-            display: inline-block;
         }
 
-        .status-draft {
+        .version-draft {
             background: var(--warning-light);
             color: var(--warning);
         }
 
-        .status-final {
+        .version-final {
             background: var(--success-light);
             color: var(--success);
         }
 
-        /* Loading */
+        .version-info {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(2px);
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            width: 500px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            animation: slideUp 0.3s ease;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #333;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 6px;
+            z-index: 200;
+            transform: translateY(100px);
+            transition: 0.3s;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .toast.show {
+            transform: translateY(0);
+        }
+
+        /* Chart Container */
+        .chart-container {
+            position: relative;
+            height: 300px;
+            margin-bottom: 20px;
+        }
+
+        /* Loading Spinner */
         .loading {
             display: none;
             position: absolute;
@@ -653,7 +613,7 @@
             width: 100%;
             height: 100%;
             background: rgba(255,255,255,0.8);
-            z-index: 100;
+            z-index: 10;
             justify-content: center;
             align-items: center;
         }
@@ -676,6 +636,91 @@
             100% { transform: rotate(360deg); }
         }
 
+        /* Training Script Styles */
+        .script-container {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            font-family: 'Georgia', serif;
+            line-height: 1.8;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .script-header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid var(--primary);
+            padding-bottom: 15px;
+        }
+
+        .script-section {
+            margin-bottom: 25px;
+        }
+
+        .script-section h3 {
+            color: var(--primary);
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+
+        .script-dialogue {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            border-left: 4px solid var(--secondary);
+        }
+
+        .script-agent {
+            font-weight: bold;
+            color: var(--info);
+        }
+
+        .script-customer {
+            font-style: italic;
+            color: var(--text-muted);
+        }
+
+        .script-note {
+            background: var(--warning-light);
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            margin-top: 10px;
+        }
+
+        /* Print Styles */
+        @media print {
+            body {
+                background: white;
+            }
+            
+            .sidebar, .top-bar, .toast, .no-print {
+                display: none !important;
+            }
+            
+            .main-content {
+                margin: 0;
+                padding: 0;
+            }
+            
+            .view-container {
+                padding: 0;
+            }
+            
+            .script-container {
+                box-shadow: none;
+                padding: 20px;
+            }
+            
+            .script-dialogue {
+                background: white;
+                border: 1px solid #ddd;
+            }
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             .sidebar {
@@ -691,11 +736,6 @@
             .period-selector {
                 flex-wrap: wrap;
             }
-            
-            .controls {
-                width: 100%;
-                justify-content: space-between;
-            }
         }
     </style>
 </head>
@@ -704,35 +744,39 @@
         <!-- Sidebar -->
         <aside class="sidebar">
             <div class="brand">
-                <i class="fas fa-chart-network"></i>
-                <span>CRISPY AGENTS</span>
+                <i class="fas fa-drumstick-bite"></i>
+                <span>CRISPY CALL CENTER</span>
             </div>
-            <nav class="nav-menu">
-                <div class="nav-item active" onclick="AgentSystem.switchView('dashboard')">
-                    <i class="fas fa-tachometer-alt"></i>
-                    Dashboard
-                </div>
-                <div class="nav-item" onclick="AgentSystem.switchView('performance')">
+            <div class="nav-menu">
+                <div class="nav-item active" onclick="AgentDashboard.switchView('performance')">
                     <i class="fas fa-chart-line"></i>
-                    Performance
+                    Agent Performance
                 </div>
-                <div class="nav-item" onclick="AgentSystem.switchView('upload')">
+                <div class="nav-item" onclick="AgentDashboard.switchView('upsell')">
+                    <i class="fas fa-hand-holding-usd"></i>
+                    Upsell Tracking
+                </div>
+                <div class="nav-item" onclick="AgentDashboard.switchView('training')">
+                    <i class="fas fa-graduation-cap"></i>
+                    Training Scripts
+                </div>
+                <div class="nav-item" onclick="AgentDashboard.switchView('upload')">
                     <i class="fas fa-upload"></i>
                     Upload Data
                 </div>
-                <div class="nav-item" onclick="AgentSystem.switchView('analytics')">
+                <div class="nav-item" onclick="AgentDashboard.switchView('analytics')">
                     <i class="fas fa-chart-pie"></i>
                     Analytics
                 </div>
-                <div class="nav-item" onclick="AgentSystem.switchView('history')">
+                <div class="nav-item" onclick="AgentDashboard.switchView('history')">
                     <i class="fas fa-history"></i>
                     History
                 </div>
-                <div class="nav-item" onclick="AgentSystem.switchView('settings')">
+                <div class="nav-item" onclick="AgentDashboard.switchView('settings')">
                     <i class="fas fa-cog"></i>
                     Settings
                 </div>
-            </nav>
+            </div>
         </aside>
 
         <!-- Main Content -->
@@ -740,138 +784,141 @@
             <!-- Top Bar -->
             <div class="top-bar">
                 <div class="page-header">
-                    <h1 id="pageTitle">Agent Performance Dashboard</h1>
+                    <h2 id="pageTitle">Agent Performance Dashboard</h2>
                     <p id="pageSubtitle">Real-time performance tracking with editable metrics</p>
                 </div>
                 <div class="controls">
-                    <div class="date-range-container">
-                        <input type="text" id="dateRange" class="form-control" style="width: 200px;" placeholder="Select date range">
-                    </div>
-                    <div class="btn-group">
-                        <button class="btn btn-secondary" onclick="AgentSystem.downloadTemplate()">
-                            <i class="fas fa-download"></i> Template
-                        </button>
-                        <button class="btn btn-primary" onclick="AgentSystem.openUploadModal()">
-                            <i class="fas fa-upload"></i> Upload Excel
-                        </button>
-                        <button class="btn btn-success" onclick="AgentSystem.finalizeReport()">
-                            <i class="fas fa-check-circle"></i> Finalize
-                        </button>
-                    </div>
+                    <button class="btn btn-secondary" onclick="AgentDashboard.downloadTemplate()">
+                        <i class="fas fa-download"></i> Template
+                    </button>
+                    <button class="btn btn-primary" onclick="AgentDashboard.openUploadModal()">
+                        <i class="fas fa-upload"></i> Upload Excel
+                    </button>
+                    <button class="btn btn-success" onclick="AgentDashboard.finalizeReport()">
+                        <i class="fas fa-check-circle"></i> Finalize Report
+                    </button>
                 </div>
-            </div>
-
-            <!-- Loading Overlay -->
-            <div class="loading" id="loading">
-                <div class="spinner"></div>
             </div>
 
             <!-- View Container -->
             <div class="view-container">
-                <!-- Dashboard View -->
-                <div id="view-dashboard" class="view active">
-                    <!-- Status Bar -->
-                    <div class="card">
-                        <div class="card-header">
-                            <h3 class="card-title">Report Status</h3>
-                            <div>
-                                <span class="status-badge status-draft" id="reportStatus">DRAFT</span>
-                                <span class="text-muted" id="reportInfo" style="margin-left: 10px; font-size: 0.85rem;">
-                                    Last edited: Just now • Period: 21 Days - Jan 2026
-                                </span>
-                            </div>
+                <!-- Loading Overlay -->
+                <div class="loading" id="loading">
+                    <div class="spinner"></div>
+                </div>
+
+                <!-- Performance View -->
+                <div id="view-performance" class="view active">
+                    <!-- Version Control -->
+                    <div class="version-control">
+                        <div>
+                            <span class="version-badge version-draft" id="versionStatus">DRAFT</span>
+                            <span class="version-info" id="versionInfo">Last edited by Admin • Just now</span>
+                        </div>
+                        <div>
+                            <span class="version-info" id="periodInfo">Period: 21 Days - Jan 2026</span>
                         </div>
                     </div>
 
                     <!-- Period Selector -->
                     <div class="period-selector">
-                        <div class="period-option active" onclick="AgentSystem.setPeriod('21-days')">21 Days</div>
-                        <div class="period-option" onclick="AgentSystem.setPeriod('monthly')">Monthly</div>
-                        <div class="period-option" onclick="AgentSystem.setPeriod('weekly')">Weekly</div>
-                        <div class="period-option" onclick="AgentSystem.setPeriod('all')">All Data</div>
+                        <div class="period-option active" onclick="AgentDashboard.setPeriod('21-days')">
+                            21 Days
+                        </div>
+                        <div class="period-option" onclick="AgentDashboard.setPeriod('monthly')">
+                            Monthly
+                        </div>
+                        <div class="period-option" onclick="AgentDashboard.setPeriod('custom')">
+                            Custom Range
+                        </div>
+                        <div class="period-option" onclick="AgentDashboard.setPeriod('all')">
+                            All Data
+                        </div>
                     </div>
 
                     <!-- KPI Summary -->
                     <div class="kpi-grid">
                         <div class="kpi-card">
                             <div class="kpi-title">Total Calls</div>
-                            <div class="kpi-value" id="kpiTotalCalls">15,211</div>
-                            <div class="kpi-change positive">
-                                <i class="fas fa-arrow-up"></i> 12.5% from last period
-                            </div>
+                            <div class="kpi-value" id="kpi-total-calls">15,211</div>
+                            <div class="kpi-change">+12.5% from last period</div>
                         </div>
                         <div class="kpi-card">
                             <div class="kpi-title">Answer Rate</div>
-                            <div class="kpi-value" id="kpiAnswerRate">42.1%</div>
-                            <div class="kpi-change positive">
-                                <i class="fas fa-arrow-up"></i> 3.2% improvement
-                            </div>
+                            <div class="kpi-value" id="kpi-answer-rate">42.1%</div>
+                            <div class="kpi-change">+3.2% from last period</div>
                         </div>
                         <div class="kpi-card">
-                            <div class="kpi-title">Avg Wait Time</div>
-                            <div class="kpi-value" id="kpiAvgWait">0:06</div>
-                            <div class="kpi-change positive">
-                                <i class="fas fa-arrow-down"></i> 15s reduction
-                            </div>
+                            <div class="kpi-title">Total Sales</div>
+                            <div class="kpi-value" id="kpi-total-sales">$124,350</div>
+                            <div class="kpi-change">+8.7% from last period</div>
                         </div>
                         <div class="kpi-card">
-                            <div class="kpi-title">Top Performer</div>
-                            <div class="kpi-value" id="kpiTopAgent">Melvin</div>
-                            <div class="kpi-title">49.55% Answer Rate</div>
+                            <div class="kpi-title">Top Upseller</div>
+                            <div class="kpi-value" id="kpi-top-upseller">Melvin</div>
+                            <div class="kpi-title">$2,450 in Upsell Revenue</div>
+                        </div>
+                    </div>
+
+                    <!-- Add New Agent Form -->
+                    <div class="card">
+                        <h3>Add New Agent</h3>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                            <div class="form-group">
+                                <label for="newAgentName">Agent Name</label>
+                                <input type="text" id="newAgentName" class="form-control" placeholder="Enter agent name">
+                            </div>
+                            <div class="form-group">
+                                <label for="newAgentOrders">Number of Orders</label>
+                                <input type="number" id="newAgentOrders" class="form-control" placeholder="Enter number of orders">
+                            </div>
+                            <div class="form-group">
+                                <label for="newAgentSales">Sales Value ($)</label>
+                                <input type="number" id="newAgentSales" class="form-control" placeholder="Enter sales value">
+                            </div>
+                            <div class="form-group">
+                                <label for="newAgentTarget">Sales Target ($)</label>
+                                <input type="number" id="newAgentTarget" class="form-control" placeholder="Enter sales target">
+                            </div>
+                            <div class="form-group">
+                                <label for="newAgentUpsellAttempts">Upsell Attempts</label>
+                                <input type="number" id="newAgentUpsellAttempts" class="form-control" placeholder="Enter upsell attempts">
+                            </div>
+                            <div class="form-group">
+                                <label for="newAgentUpsellSuccess">Successful Upsells</label>
+                                <input type="number" id="newAgentUpsellSuccess" class="form-control" placeholder="Enter successful upsells">
+                            </div>
+                        </div>
+                        <div style="margin-top: 15px;">
+                            <button class="btn btn-primary" onclick="AgentDashboard.addNewAgent()">
+                                <i class="fas fa-plus"></i> Add Agent
+                            </button>
                         </div>
                     </div>
 
                     <!-- Performance Chart -->
                     <div class="card">
-                        <div class="card-header">
-                            <h3 class="card-title">Answer Rate Trend</h3>
-                            <select id="chartMetric" class="form-control" style="max-width: 200px;">
-                                <option value="answerRate">Answer Rate</option>
-                                <option value="calls">Total Calls</option>
-                                <option value="waitTime">Wait Time</option>
-                            </select>
-                        </div>
+                        <h3>Performance Overview</h3>
                         <div class="chart-container">
                             <canvas id="performanceChart"></canvas>
                         </div>
                     </div>
 
-                    <!-- Quick Actions -->
+                    <!-- Performance Table -->
                     <div class="card">
-                        <h3 class="card-title" style="margin-bottom: 15px;">Quick Actions</h3>
-                        <div class="btn-group" style="flex-wrap: wrap; gap: 10px;">
-                            <button class="btn btn-secondary" onclick="AgentSystem.exportReport()">
-                                <i class="fas fa-file-export"></i> Export Report
-                            </button>
-                            <button class="btn btn-secondary" onclick="AgentSystem.sendReport()">
-                                <i class="fas fa-paper-plane"></i> Send to Manager
-                            </button>
-                            <button class="btn btn-secondary" onclick="AgentSystem.printReport()">
-                                <i class="fas fa-print"></i> Print Report
-                            </button>
-                            <button class="btn btn-info" onclick="AgentSystem.generateInsights()">
-                                <i class="fas fa-lightbulb"></i> Generate Insights
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Performance View -->
-                <div id="view-performance" class="view">
-                    <div class="card">
-                        <div class="card-header">
-                            <h3 class="card-title">Agent Performance Details</h3>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                            <h3>Agent Performance Details</h3>
                             <div class="btn-group">
-                                <button class="btn btn-sm btn-secondary" onclick="AgentSystem.resetEdits()">
+                                <button class="btn btn-sm btn-secondary" onclick="AgentDashboard.resetChanges()">
                                     <i class="fas fa-undo"></i> Reset Changes
                                 </button>
-                                <button class="btn btn-sm btn-primary" onclick="AgentSystem.saveAllChanges()">
-                                    <i class="fas fa-save"></i> Save All
+                                <button class="btn btn-sm btn-primary" onclick="AgentDashboard.saveChanges()">
+                                    <i class="fas fa-save"></i> Save Changes
                                 </button>
                             </div>
                         </div>
                         <div class="table-wrapper">
-                            <table id="performanceTable">
+                            <table id="agentTable">
                                 <thead>
                                     <tr>
                                         <th>Agent</th>
@@ -882,59 +929,216 @@
                                         <th>Max Wait</th>
                                         <th>Avg Talk</th>
                                         <th>Total Talk</th>
+                                        <th>Orders</th>
+                                        <th>Sales ($)</th>
+                                        <th>Target ($)</th>
+                                        <th>Achievement %</th>
                                         <th>Answer Rate</th>
                                         <th>Performance</th>
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
-                                <tbody id="performanceTableBody">
-                                    <!-- Data loaded dynamically -->
+                                <tbody id="agentTableBody">
+                                    <!-- Data will be populated here -->
                                 </tbody>
                             </table>
                         </div>
                         <div style="margin-top: 15px; font-size: 0.85rem; color: var(--text-muted); text-align: center;">
-                            <i class="fas fa-info-circle"></i> Click on any number to edit. Changes update calculations automatically.
+                            <i class="fas fa-info-circle"></i> Click on any number to edit. Changes are saved automatically.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Upsell View -->
+                <div id="view-upsell" class="view">
+                    <div class="card">
+                        <h3>Upsell Performance Tracking</h3>
+                        <p style="color: var(--text-muted); margin-bottom: 20px;">
+                            Track and analyze upselling performance across all agents. Identify top performers and areas for improvement.
+                        </p>
+                    </div>
+
+                    <!-- Upsell KPIs -->
+                    <div class="kpi-grid">
+                        <div class="kpi-card">
+                            <div class="kpi-title">Total Upsell Revenue</div>
+                            <div class="kpi-value" id="kpi-upsell-revenue">$8,450</div>
+                            <div class="kpi-change">+15.3% from last period</div>
+                        </div>
+                        <div class="kpi-card">
+                            <div class="kpi-title">Avg Upsell Success Rate</div>
+                            <div class="kpi-value" id="kpi-upsell-rate">28.5%</div>
+                            <div class="kpi-change">+2.1% from last period</div>
+                        </div>
+                        <div class="kpi-card">
+                            <div class="kpi-title">Total Upsell Attempts</div>
+                            <div class="kpi-value" id="kpi-upsell-attempts">1,245</div>
+                            <div class="kpi-change">+89 from last period</div>
+                        </div>
+                        <div class="kpi-card">
+                            <div class="kpi-title">Top Upseller</div>
+                            <div class="kpi-value" id="kpi-upsell-top-agent">Melvin</div>
+                            <div class="kpi-title">42% Success Rate</div>
+                        </div>
+                    </div>
+
+                    <!-- Upsell Chart -->
+                    <div class="card">
+                        <h3>Upsell Performance Comparison</h3>
+                        <div class="chart-container">
+                            <canvas id="upsellChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Upsell Table -->
+                    <div class="card">
+                        <h3>Agent Upsell Details</h3>
+                        <div class="table-wrapper">
+                            <table id="upsellTable">
+                                <thead>
+                                    <tr>
+                                        <th>Agent</th>
+                                        <th>Upsell Attempts</th>
+                                        <th>Successful Upsells</th>
+                                        <th>Success Rate</th>
+                                        <th>Upsell Revenue ($)</th>
+                                        <th>Avg Upsell Value ($)</th>
+                                        <th>Performance</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="upsellTableBody">
+                                    <!-- Data will be populated here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Training View -->
+                <div id="view-training" class="view">
+                    <div class="card no-print">
+                        <h3>Training Scripts & Materials</h3>
+                        <p style="color: var(--text-muted); margin-bottom: 20px;">
+                            Access and print training scripts for agent development and performance improvement.
+                        </p>
+                        <button class="btn btn-primary" onclick="window.print()">
+                            <i class="fas fa-print"></i> Print Script
+                        </button>
+                    </div>
+
+                    <div class="script-container">
+                        <div class="script-header">
+                            <h1>Crispy Chicken - Upsell Training Script</h1>
+                            <p>Effective Upselling Techniques for Customer Service Excellence</p>
+                        </div>
+
+                        <div class="script-section">
+                            <h3>1. Opening & Rapport Building</h3>
+                            <div class="script-dialogue">
+                                <p class="script-agent">Agent: "Thank you for calling Crispy Chicken! My name is [Agent Name]. How can I help you today?"</p>
+                                <p class="script-customer">Customer: "I'd like to place an order for delivery."</p>
+                                <p class="script-agent">Agent: "Excellent choice! I'd be happy to help you with that. Before we proceed, may I know your name please?"</p>
+                            </div>
+                            <div class="script-note">
+                                <strong>Note:</strong> Always use the customer's name to personalize the conversation and build rapport.
+                            </div>
+                        </div>
+
+                        <div class="script-section">
+                            <h3>2. Order Taking & Opportunity Identification</h3>
+                            <div class="script-dialogue">
+                                <p class="script-agent">Agent: "Great, [Customer Name]! What would you like to order today?"</p>
+                                <p class="script-customer">Customer: "I'll have the crispy chicken burger meal."</p>
+                                <p class="script-agent">Agent: "Perfect choice! Our crispy chicken burger is one of our most popular items. Would you like to make it a large meal for just $2 more? You'll get more fries and a larger drink."</p>
+                            </div>
+                            <div class="script-note">
+                                <strong>Note:</strong> Identify upsell opportunities by suggesting size upgrades, add-ons, or complementary items.
+                            </div>
+                        </div>
+
+                        <div class="script-section">
+                            <h3>3. Value Proposition Upsell</h3>
+                            <div class="script-dialogue">
+                                <p class="script-customer">Customer: "Sure, make it a large meal."</p>
+                                <p class="script-agent">Agent: "Excellent! While I have you, our new spicy chicken wings are on special today. Would you like to add a 6-piece order for just $5.99? They pair perfectly with your burger."</p>
+                                <p class="script-customer">Customer: "Hmm, I'm not sure."</p>
+                                <p class="script-agent">Agent: "I completely understand. Many customers who try them come back specifically for the wings. They're crispy, flavorful, and today's special price saves you $2. Would you like to give them a try?"</p>
+                            </div>
+                            <div class="script-note">
+                                <strong>Note:</strong> Highlight value, popularity, and special offers. Handle objections with confidence and provide social proof.
+                            </div>
+                        </div>
+
+                        <div class="script-section">
+                            <h3>4. Closing & Confirmation</h3>
+                            <div class="script-dialogue">
+                                <p class="script-customer">Customer: "Okay, I'll try the wings."</p>
+                                <p class="script-agent">Agent: "Great choice! You won't regret it. So I have you down for one large crispy chicken burger meal and a 6-piece order of our spicy wings. Your total comes to $18.99. Will this be for delivery or pickup?"</p>
+                            </div>
+                            <div class="script-note">
+                                <strong>Note:</strong> Always confirm the complete order and provide the total before proceeding to payment/delivery details.
+                            </div>
+                        </div>
+
+                        <div class="script-section">
+                            <h3>5. Final Upsell Opportunity</h3>
+                            <div class="script-dialogue">
+                                <p class="script-agent">Agent: "Perfect! Just to let you know, if you add our signature chocolate lava cake for $4.99, you'll qualify for free delivery on orders over $20. Would you like to add the cake and save on delivery?"</p>
+                                <p class="script-customer">Customer: "That sounds good, add the cake."</p>
+                                <p class="script-agent">Agent: "Excellent! Your new total is $23.98 with free delivery. Your order will be ready in approximately 25 minutes. Thank you for choosing Crispy Chicken!"</p>
+                            </div>
+                            <div class="script-note">
+                                <strong>Note:</strong> Use final upsell opportunities to provide additional value to the customer, such as free delivery or special combo deals.
+                            </div>
+                        </div>
+
+                        <div class="script-section">
+                            <h3>Key Upselling Principles</h3>
+                            <ul>
+                                <li><strong>Listen Actively:</strong> Pay attention to customer preferences and needs</li>
+                                <li><strong>Be Genuine:</strong> Recommend items you truly believe in</li>
+                                <li><strong>Focus on Value:</strong> Explain benefits, not just features</li>
+                                <li><strong>Timing is Key:</strong> Introduce upsells at natural conversation points</li>
+                                <li><strong>Handle Objections:</strong> Acknowledge concerns and provide solutions</li>
+                                <li><strong>Know Your Products:</strong> Be prepared to answer questions about menu items</li>
+                            </ul>
                         </div>
                     </div>
                 </div>
 
                 <!-- Upload View -->
                 <div id="view-upload" class="view">
-                    <div class="card">
-                        <h3 class="card-title">Upload Agent Performance Data</h3>
+                    <div class="upload-section">
+                        <h3>Upload Agent Performance Data</h3>
                         <p style="margin-bottom: 20px; color: var(--text-muted);">
-                            Upload Excel/CSV file with agent performance data. System will automatically calculate all metrics.
+                            Upload Excel/CSV file with agent performance data. The system will automatically calculate all metrics.
                         </p>
                         
                         <div class="upload-area" id="uploadArea" onclick="document.getElementById('fileInput').click()">
                             <i class="fas fa-cloud-upload-alt"></i>
                             <p><strong>Click to upload or drag and drop</strong></p>
                             <p>Excel (.xlsx, .xls) or CSV files only</p>
-                            <p style="font-size: 0.8rem; margin-top: 10px;">Supports your provided data format</p>
+                            <p style="font-size: 0.8rem; margin-top: 10px;">Maximum file size: 10MB</p>
                         </div>
                         
-                        <input type="file" id="fileInput" accept=".csv,.xlsx,.xls" style="display: none;" 
-                               onchange="AgentSystem.handleFileUpload(event)">
+                        <input type="file" id="fileInput" accept=".csv,.xlsx,.xls" style="display: none;" onchange="AgentDashboard.handleFileUpload(event)">
                         
                         <div style="margin-top: 30px;">
-                            <h4>Data Format Requirements:</h4>
+                            <h4>File Format Requirements:</h4>
                             <div style="background: #f8f9fa; padding: 15px; border-radius: 6px; font-size: 0.85rem;">
-                                <p><strong>Required columns:</strong> Agent, Total Rings, Answered, Missed, Avg Wait, Max Wait, Avg Talk, Total Talk</p>
-                                <p><strong>Time format:</strong> HH:MM:SS or MM:SS (0:08, 1:28, 16:09:29)</p>
-                                <p><strong>Example:</strong> "201 – Nirjala,3061,656,2405,0:08,3:32,1:28,16:09:29"</p>
-                                <p><strong>Automatic calculations:</strong> Answer Rate = Answered / Total Rings</p>
+                                <p><strong>Required columns:</strong> Agent, Total_Rings, Answered, Missed, Avg_Wait, Max_Wait, Avg_Talk, Total_Talk, Orders, Sales, Target, Upsell_Attempts, Upsell_Success</p>
+                                <p><strong>Time format:</strong> HH:MM:SS or MM:SS</p>
+                                <p><strong>Example row:</strong> "201 – Nirjala,3061,656,2405,0:08,3:32,1:28,16:09:29,125,12500,15000,45,12"</p>
                             </div>
                         </div>
                         
-                        <div style="margin-top: 20px; display: flex; gap: 10px; flex-wrap: wrap;">
-                            <button class="btn btn-secondary" onclick="AgentSystem.downloadTemplate()">
+                        <div style="margin-top: 20px; display: flex; gap: 10px;">
+                            <button class="btn btn-secondary" onclick="AgentDashboard.downloadTemplate()">
                                 <i class="fas fa-download"></i> Download Template
                             </button>
-                            <button class="btn btn-info" onclick="AgentSystem.loadSampleData()">
+                            <button class="btn btn-info" onclick="AgentDashboard.loadSampleData()">
                                 <i class="fas fa-magic"></i> Load Sample Data
-                            </button>
-                            <button class="btn btn-primary" onclick="AgentSystem.processManualEntry()">
-                                <i class="fas fa-keyboard"></i> Manual Entry
                             </button>
                         </div>
                     </div>
@@ -943,16 +1147,16 @@
                 <!-- Analytics View -->
                 <div id="view-analytics" class="view">
                     <div class="card">
-                        <h3 class="card-title">Performance Analytics</h3>
+                        <h3>Performance Analytics</h3>
                         <div class="chart-container">
                             <canvas id="analyticsChart"></canvas>
                         </div>
                     </div>
                     
                     <div class="card">
-                        <h3 class="card-title">Performance Insights</h3>
+                        <h3>Performance Insights</h3>
                         <div id="insightsContainer">
-                            <!-- Insights generated here -->
+                            <!-- Insights will be generated here -->
                         </div>
                     </div>
                 </div>
@@ -963,82 +1167,19 @@
     <!-- Upload Modal -->
     <div id="uploadModal" class="modal">
         <div class="modal-content">
-            <h3 style="margin-bottom: 20px;">Upload Performance Data</h3>
-            <div class="form-group">
-                <label class="form-label">Select Period</label>
-                <select id="uploadPeriod" class="form-control">
-                    <option value="21-days">21 Days</option>
-                    <option value="monthly">Monthly</option>
-                    <option value="weekly">Weekly</option>
-                    <option value="custom">Custom Period</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label class="form-label">Select File</label>
-                <input type="file" id="modalFileInput" class="form-control" accept=".csv,.xlsx,.xls">
-            </div>
-            <div style="display: flex; gap: 10px; margin-top: 20px;">
-                <button class="btn btn-primary" onclick="AgentSystem.processUpload()">
-                    <i class="fas fa-upload"></i> Upload & Process
-                </button>
-                <button class="btn btn-secondary" onclick="AgentSystem.closeModal()">
-                    Cancel
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Manual Entry Modal -->
-    <div id="manualEntryModal" class="modal">
-        <div class="modal-content">
-            <h3 style="margin-bottom: 20px;">Manual Data Entry</h3>
-            <form id="manualEntryForm">
-                <div class="form-group">
-                    <label class="form-label">Agent</label>
-                    <select id="entryAgent" class="form-control" required>
-                        <option value="">Select Agent</option>
-                        <option value="201 – Nirjala">201 – Nirjala</option>
-                        <option value="202 – Saleh Emad">202 – Saleh Emad</option>
-                        <option value="203 – Nona Rose">203 – Nona Rose</option>
-                        <option value="204 – Manju Ranabhat">204 – Manju Ranabhat</option>
-                        <option value="205 – Melvin Compendio">205 – Melvin Compendio</option>
-                        <option value="206 – Jasmine">206 – Jasmine</option>
-                        <option value="207 – Asmita">207 – Asmita</option>
-                    </select>
-                </div>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
-                    <div class="form-group">
-                        <label class="form-label">Total Rings</label>
-                        <input type="number" id="entryRings" class="form-control" required min="0">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Answered</label>
-                        <input type="number" id="entryAnswered" class="form-control" required min="0">
-                    </div>
-                </div>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
-                    <div class="form-group">
-                        <label class="form-label">Avg Wait (MM:SS)</label>
-                        <input type="text" id="entryAvgWait" class="form-control" placeholder="0:08" required>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Avg Talk (MM:SS)</label>
-                        <input type="text" id="entryAvgTalk" class="form-control" placeholder="1:28" required>
-                    </div>
-                </div>
-                <div style="background: #f8f9fa; padding: 15px; border-radius: 6px; margin-bottom: 20px;">
-                    <strong>Calculated Metrics:</strong>
-                    <div id="calculatedMetrics" style="margin-top: 10px;">
-                        Answer Rate: <span id="calcAnswerRate">0%</span><br>
-                        Missed Calls: <span id="calcMissed">0</span><br>
-                        Total Talk: <span id="calcTotalTalk">0:00:00</span>
-                    </div>
-                </div>
+            <h3>Upload Excel File</h3>
+            <div style="margin-bottom: 20px;">
+                <p>Select Excel or CSV file with agent performance data:</p>
+                <input type="file" id="modalFileInput" accept=".csv,.xlsx,.xls" class="form-control" style="margin-bottom: 15px;">
                 <div style="display: flex; gap: 10px;">
-                    <button type="submit" class="btn btn-primary">Save Entry</button>
-                    <button type="button" class="btn btn-secondary" onclick="AgentSystem.closeModal()">Cancel</button>
+                    <button class="btn btn-primary" onclick="AgentDashboard.processUploadedFile()">
+                        <i class="fas fa-upload"></i> Upload & Process
+                    </button>
+                    <button class="btn btn-secondary" onclick="AgentDashboard.closeModal()">
+                        Cancel
+                    </button>
                 </div>
-            </form>
+            </div>
         </div>
     </div>
 
@@ -1046,178 +1187,26 @@
     <div id="toast" class="toast"></div>
 
     <script>
-        // ============================================
-        // AGENT PERFORMANCE MANAGEMENT SYSTEM
-        // ============================================
-
-        const AgentSystem = {
+        // Agent Performance Dashboard
+        const AgentDashboard = {
             // Data Storage
             agents: [],
-            performanceData: [],
             currentPeriod: '21-days',
-            reportStatus: 'draft',
+            versionStatus: 'draft',
             isDirty: false,
-            charts: {},
-            editingCell: null,
+            chart: null,
+            analyticsChart: null,
+            upsellChart: null,
 
-            // Initialize System
+            // Initialize
             init: function() {
-                console.log('🔄 Initializing Agent Performance System...');
-                this.loadData();
+                this.loadFromStorage();
                 this.setupEventListeners();
-                this.setupDateRangePicker();
-                this.renderDashboard();
-                this.showToast('System ready! Loaded ' + this.agents.length + ' agents');
-            },
-
-            // Load Initial Data
-            loadData: function() {
-                try {
-                    // Try to load from localStorage first
-                    const saved = localStorage.getItem('crispyAgentData');
-                    if (saved) {
-                        const data = JSON.parse(saved);
-                        this.agents = data.agents || [];
-                        this.performanceData = data.performanceData || [];
-                        this.reportStatus = data.reportStatus || 'draft';
-                        console.log('📁 Loaded data from storage:', this.agents.length, 'agents');
-                    } else {
-                        // Load sample data
-                        this.loadSampleData();
-                    }
-                } catch (error) {
-                    console.error('Error loading data:', error);
-                    this.loadSampleData();
-                }
-            },
-
-            // Load Sample Data (Your Provided Data)
-            loadSampleData: function() {
-                this.agents = [
-                    { id: 1, code: '201', name: 'Nirjala', active: true, target: 45 },
-                    { id: 2, code: '202', name: 'Saleh Emad', active: true, target: 45 },
-                    { id: 3, code: '203', name: 'Nona Rose', active: true, target: 45 },
-                    { id: 4, code: '204', name: 'Manju Ranabhat', active: true, target: 45 },
-                    { id: 5, code: '205', name: 'Melvin Compendio', active: true, target: 45 },
-                    { id: 6, code: '206', name: 'Jasmine', active: true, target: 45 },
-                    { id: 7, code: '207', name: 'Asmita', active: true, target: 45 }
-                ];
-
-                // Your exact performance data
-                this.performanceData = [
-                    {
-                        agentId: 1,
-                        period: '21-days',
-                        totalRings: 3061,
-                        answered: 656,
-                        missed: 2405,
-                        avgWait: '0:08',
-                        maxWait: '3:32',
-                        avgTalk: '1:28',
-                        totalTalk: '16:09:29',
-                        answerRate: 21.43,
-                        lastUpdated: new Date().toISOString()
-                    },
-                    {
-                        agentId: 2,
-                        period: '21-days',
-                        totalRings: 559,
-                        answered: 144,
-                        missed: 415,
-                        avgWait: '0:04',
-                        maxWait: '0:42',
-                        avgTalk: '1:32',
-                        totalTalk: '3:40:48',
-                        answerRate: 25.76,
-                        lastUpdated: new Date().toISOString()
-                    },
-                    {
-                        agentId: 3,
-                        period: '21-days',
-                        totalRings: 2072,
-                        answered: 1017,
-                        missed: 1055,
-                        avgWait: '0:07',
-                        maxWait: '7:49',
-                        avgTalk: '1:44',
-                        totalTalk: '29:39:10',
-                        answerRate: 49.08,
-                        lastUpdated: new Date().toISOString()
-                    },
-                    {
-                        agentId: 4,
-                        period: '21-days',
-                        totalRings: 2788,
-                        answered: 1220,
-                        missed: 1568,
-                        avgWait: '0:07',
-                        maxWait: '2:25',
-                        avgTalk: '1:28',
-                        totalTalk: '29:53:16',
-                        answerRate: 43.76,
-                        lastUpdated: new Date().toISOString()
-                    },
-                    {
-                        agentId: 5,
-                        period: '21-days',
-                        totalRings: 2246,
-                        answered: 1113,
-                        missed: 1133,
-                        avgWait: '0:05',
-                        maxWait: '2:29',
-                        avgTalk: '1:56',
-                        totalTalk: '36:07:10',
-                        answerRate: 49.55,
-                        lastUpdated: new Date().toISOString()
-                    },
-                    {
-                        agentId: 6,
-                        period: '21-days',
-                        totalRings: 1638,
-                        answered: 448,
-                        missed: 1190,
-                        avgWait: '0:07',
-                        maxWait: '2:46',
-                        avgTalk: '2:26',
-                        totalTalk: '18:15:31',
-                        answerRate: 27.35,
-                        lastUpdated: new Date().toISOString()
-                    },
-                    {
-                        agentId: 7,
-                        period: '21-days',
-                        totalRings: 2847,
-                        answered: 1333,
-                        missed: 1514,
-                        avgWait: '0:07',
-                        maxWait: '2:00',
-                        avgTalk: '1:27',
-                        totalTalk: '32:19:58',
-                        answerRate: 46.82,
-                        lastUpdated: new Date().toISOString()
-                    }
-                ];
-
-                this.saveData();
-                this.showToast('Sample data loaded successfully!');
-            },
-
-            // Save Data to Storage
-            saveData: function() {
-                try {
-                    const data = {
-                        agents: this.agents,
-                        performanceData: this.performanceData,
-                        reportStatus: this.reportStatus,
-                        lastSaved: new Date().toISOString()
-                    };
-                    localStorage.setItem('crispyAgentData', JSON.stringify(data));
-                    console.log('💾 Data saved to storage');
-                    this.isDirty = false;
-                } catch (error) {
-                    console.error('Error saving data:', error);
-                    this.showToast('Error saving data!', 'error');
-                }
+                this.renderAgentTable();
+                this.renderUpsellTable();
+                this.updateKPIs();
+                this.renderCharts();
+                this.updateVersionInfo();
             },
 
             // Setup Event Listeners
@@ -1225,9 +1214,10 @@
                 // Auto-save on changes
                 setInterval(() => {
                     if (this.isDirty) {
-                        this.saveData();
+                        this.saveToStorage();
+                        this.isDirty = false;
                     }
-                }, 10000); // Auto-save every 10 seconds
+                }, 5000);
 
                 // Drag and drop for upload
                 const uploadArea = document.getElementById('uploadArea');
@@ -1253,42 +1243,6 @@
                         this.handleFileUpload({ target: { files: files } });
                     }
                 });
-
-                // Chart metric selector
-                document.getElementById('chartMetric')?.addEventListener('change', (e) => {
-                    this.updatePerformanceChart();
-                });
-
-                // Manual entry form calculations
-                ['entryRings', 'entryAnswered', 'entryAvgTalk'].forEach(id => {
-                    document.getElementById(id)?.addEventListener('input', () => {
-                        this.calculateEntryMetrics();
-                    });
-                });
-
-                // Manual entry form submit
-                document.getElementById('manualEntryForm')?.addEventListener('submit', (e) => {
-                    e.preventDefault();
-                    this.saveManualEntry();
-                });
-            },
-
-            // Setup Date Range Picker
-            setupDateRangePicker: function() {
-                $('#dateRange').daterangepicker({
-                    opens: 'left',
-                    locale: { format: 'YYYY-MM-DD' },
-                    ranges: {
-                        'Today': [moment(), moment()],
-                        'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-                        'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-                        'Last 21 Days': [moment().subtract(20, 'days'), moment()],
-                        'This Month': [moment().startOf('month'), moment().endOf('month')],
-                        'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-                    }
-                }, (start, end) => {
-                    this.filterByDateRange(start, end);
-                });
             },
 
             // View Management
@@ -1297,7 +1251,7 @@
                 document.querySelectorAll('.nav-item').forEach(item => {
                     item.classList.remove('active');
                 });
-                event?.currentTarget?.classList.add('active');
+                event.target.classList.add('active');
 
                 // Update view
                 document.querySelectorAll('.view').forEach(v => {
@@ -1307,263 +1261,415 @@
 
                 // Update page title
                 const titles = {
-                    dashboard: { title: 'Agent Performance Dashboard', subtitle: 'Real-time performance tracking with editable metrics' },
-                    performance: { title: 'Performance Details', subtitle: 'Edit and analyze individual agent performance' },
-                    upload: { title: 'Upload Data', subtitle: 'Import Excel/CSV files or manual entry' },
-                    analytics: { title: 'Analytics & Insights', subtitle: 'Performance analysis and recommendations' },
-                    history: { title: 'History & Reports', subtitle: 'Historical data and report archives' },
-                    settings: { title: 'Settings', subtitle: 'System configuration and preferences' }
+                    performance: { title: 'Agent Performance Dashboard', subtitle: 'Real-time performance tracking with editable metrics' },
+                    upsell: { title: 'Upsell Tracking', subtitle: 'Monitor and analyze upselling performance' },
+                    training: { title: 'Training Scripts', subtitle: 'Access training materials and scripts' },
+                    upload: { title: 'Upload Data', subtitle: 'Import Excel/CSV files with agent performance data' },
+                    analytics: { title: 'Analytics', subtitle: 'Performance insights and trend analysis' },
+                    history: { title: 'History', subtitle: 'Previous performance reports and versions' },
+                    settings: { title: 'Settings', subtitle: 'Configure dashboard settings and preferences' }
                 };
 
                 document.getElementById('pageTitle').textContent = titles[view]?.title || 'Agent Performance Dashboard';
                 document.getElementById('pageSubtitle').textContent = titles[view]?.subtitle || '';
 
                 // Render specific view
-                if (view === 'dashboard') {
-                    this.renderDashboard();
-                } else if (view === 'performance') {
-                    this.renderPerformanceTable();
-                } else if (view === 'analytics') {
+                if (view === 'analytics') {
                     this.renderAnalytics();
+                } else if (view === 'upsell') {
+                    this.renderUpsellChart();
                 }
             },
 
-            // Render Dashboard
-            renderDashboard: function() {
-                this.updateKPIs();
-                this.updatePerformanceChart();
-                this.updateReportStatus();
-            },
-
-            // Update KPIs
-            updateKPIs: function() {
-                const filteredData = this.getFilteredData();
-                
-                if (filteredData.length === 0) {
-                    console.warn('No data available for KPIs');
-                    return;
-                }
-
-                // Calculate totals
-                const totalCalls = filteredData.reduce((sum, d) => sum + d.totalRings, 0);
-                const totalAnswered = filteredData.reduce((sum, d) => sum + d.answered, 0);
-                const avgAnswerRate = totalCalls > 0 ? ((totalAnswered / totalCalls) * 100).toFixed(1) : 0;
-
-                // Find top performer
-                let topAgent = filteredData[0];
-                filteredData.forEach(data => {
-                    if (data.answerRate > topAgent.answerRate) {
-                        topAgent = data;
-                    }
-                });
-
-                // Calculate average wait time
-                const totalWaitSeconds = filteredData.reduce((sum, d) => {
-                    const [min, sec] = d.avgWait.split(':').map(Number);
-                    return sum + (min * 60) + (sec || 0);
-                }, 0);
-                
-                const avgWaitSeconds = Math.round(totalWaitSeconds / filteredData.length);
-                const avgWaitFormatted = `${Math.floor(avgWaitSeconds / 60)}:${(avgWaitSeconds % 60).toString().padStart(2, '0')}`;
-
-                // Update KPI cards
-                document.getElementById('kpiTotalCalls').textContent = totalCalls.toLocaleString();
-                document.getElementById('kpiAnswerRate').textContent = `${avgAnswerRate}%`;
-                document.getElementById('kpiAvgWait').textContent = avgWaitFormatted;
-                
-                const agent = this.agents.find(a => a.id === topAgent.agentId);
-                document.getElementById('kpiTopAgent').textContent = agent?.name || 'Unknown';
-            },
-
-            // Update Performance Chart
-            updatePerformanceChart: function() {
-                const ctx = document.getElementById('performanceChart');
-                if (!ctx) return;
-
-                const filteredData = this.getFilteredData();
-                const metric = document.getElementById('chartMetric')?.value || 'answerRate';
-
-                // Destroy existing chart
-                if (this.charts.performance) {
-                    this.charts.performance.destroy();
-                }
-
-                // Prepare data
-                const labels = filteredData.map(data => {
-                    const agent = this.agents.find(a => a.id === data.agentId);
-                    return `${agent?.code} - ${agent?.name}`;
-                });
-
-                const dataset = filteredData.map(data => {
-                    switch(metric) {
-                        case 'answerRate': return data.answerRate;
-                        case 'calls': return data.totalRings;
-                        case 'waitTime': 
-                            const [min, sec] = data.avgWait.split(':').map(Number);
-                            return (min * 60) + (sec || 0);
-                        default: return data.answerRate;
-                    }
-                });
-
-                const colors = this.generateColors(dataset.length);
-                const yAxisLabel = {
-                    answerRate: 'Answer Rate (%)',
-                    calls: 'Number of Calls',
-                    waitTime: 'Wait Time (seconds)'
-                }[metric];
-
-                // Create chart
-                this.charts.performance = new Chart(ctx, {
-                    type: 'bar',
-                    data: {
-                        labels: labels,
-                        datasets: [{
-                            label: yAxisLabel,
-                            data: dataset,
-                            backgroundColor: colors,
-                            borderColor: colors.map(c => c.replace('0.7', '1')),
-                            borderWidth: 1
-                        }]
+            // Load Sample Data (Initial Data)
+            loadSampleData: function() {
+                this.agents = [
+                    {
+                        id: 1,
+                        agentId: '201',
+                        name: 'Nirjala',
+                        totalRings: 3061,
+                        answered: 656,
+                        missed: 2405,
+                        avgWait: '0:08',
+                        maxWait: '3:32',
+                        avgTalk: '1:28',
+                        totalTalk: '16:09:29',
+                        orders: 125,
+                        sales: 12500,
+                        target: 15000,
+                        upsellAttempts: 180,
+                        upsellSuccess: 45,
+                        upsellRevenue: 1350,
+                        period: '21-days'
                     },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        scales: {
-                            y: {
-                                beginAtZero: true,
-                                title: {
-                                    display: true,
-                                    text: yAxisLabel
-                                }
-                            }
-                        },
-                        plugins: {
-                            legend: {
-                                display: false
-                            },
-                            tooltip: {
-                                callbacks: {
-                                    label: function(context) {
-                                        let value = context.raw;
-                                        if (metric === 'answerRate') {
-                                            return `${value}% answer rate`;
-                                        } else if (metric === 'waitTime') {
-                                            const min = Math.floor(value / 60);
-                                            const sec = value % 60;
-                                            return `${min}:${sec.toString().padStart(2, '0')} average wait`;
-                                        }
-                                        return `${value.toLocaleString()} calls`;
-                                    }
-                                }
-                            }
-                        }
+                    {
+                        id: 2,
+                        agentId: '202',
+                        name: 'Saleh Emad',
+                        totalRings: 559,
+                        answered: 144,
+                        missed: 415,
+                        avgWait: '0:04',
+                        maxWait: '0:42',
+                        avgTalk: '1:32',
+                        totalTalk: '3:40:48',
+                        orders: 78,
+                        sales: 8900,
+                        target: 10000,
+                        upsellAttempts: 95,
+                        upsellSuccess: 20,
+                        upsellRevenue: 680,
+                        period: '21-days'
+                    },
+                    {
+                        id: 3,
+                        agentId: '203',
+                        name: 'Nona Rose',
+                        totalRings: 2072,
+                        answered: 1017,
+                        missed: 1055,
+                        avgWait: '0:07',
+                        maxWait: '7:49',
+                        avgTalk: '1:44',
+                        totalTalk: '29:39:10',
+                        orders: 156,
+                        sales: 18200,
+                        target: 18000,
+                        upsellAttempts: 220,
+                        upsellSuccess: 65,
+                        upsellRevenue: 1950,
+                        period: '21-days'
+                    },
+                    {
+                        id: 4,
+                        agentId: '204',
+                        name: 'Manju Ranabhat',
+                        totalRings: 2788,
+                        answered: 1220,
+                        missed: 1568,
+                        avgWait: '0:07',
+                        maxWait: '2:25',
+                        avgTalk: '1:28',
+                        totalTalk: '29:53:16',
+                        orders: 143,
+                        sales: 15400,
+                        target: 16000,
+                        upsellAttempts: 190,
+                        upsellSuccess: 48,
+                        upsellRevenue: 1420,
+                        period: '21-days'
+                    },
+                    {
+                        id: 5,
+                        agentId: '205',
+                        name: 'Melvin Compendio',
+                        totalRings: 2246,
+                        answered: 1113,
+                        missed: 1133,
+                        avgWait: '0:05',
+                        maxWait: '2:29',
+                        avgTalk: '1:56',
+                        totalTalk: '36:07:10',
+                        orders: 189,
+                        sales: 22100,
+                        target: 20000,
+                        upsellAttempts: 285,
+                        upsellSuccess: 120,
+                        upsellRevenue: 2450,
+                        period: '21-days'
+                    },
+                    {
+                        id: 6,
+                        agentId: '206',
+                        name: 'Jasmine',
+                        totalRings: 1638,
+                        answered: 448,
+                        missed: 1190,
+                        avgWait: '0:07',
+                        maxWait: '2:46',
+                        avgTalk: '2:26',
+                        totalTalk: '18:15:31',
+                        orders: 92,
+                        sales: 9800,
+                        target: 12000,
+                        upsellAttempts: 110,
+                        upsellSuccess: 25,
+                        upsellRevenue: 600,
+                        period: '21-days'
+                    },
+                    {
+                        id: 7,
+                        agentId: '207',
+                        name: 'Asmita',
+                        totalRings: 2847,
+                        answered: 1333,
+                        missed: 1514,
+                        avgWait: '0:07',
+                        maxWait: '2:00',
+                        avgTalk: '1:27',
+                        totalTalk: '32:19:58',
+                        orders: 167,
+                        sales: 19300,
+                        target: 19000,
+                        upsellAttempts: 240,
+                        upsellSuccess: 72,
+                        upsellRevenue: 1800,
+                        period: '21-days'
                     }
-                });
+                ];
+
+                this.renderAgentTable();
+                this.renderUpsellTable();
+                this.updateKPIs();
+                this.renderCharts();
+                this.showToast('Sample data loaded successfully!');
             },
 
-            // Render Performance Table
-            renderPerformanceTable: function() {
-                const tbody = document.getElementById('performanceTableBody');
-                const filteredData = this.getFilteredData();
+            // Add New Agent
+            addNewAgent: function() {
+                const name = document.getElementById('newAgentName').value.trim();
+                const orders = parseInt(document.getElementById('newAgentOrders').value) || 0;
+                const sales = parseFloat(document.getElementById('newAgentSales').value) || 0;
+                const target = parseFloat(document.getElementById('newAgentTarget').value) || 0;
+                const upsellAttempts = parseInt(document.getElementById('newAgentUpsellAttempts').value) || 0;
+                const upsellSuccess = parseInt(document.getElementById('newAgentUpsellSuccess').value) || 0;
 
-                if (filteredData.length === 0) {
-                    tbody.innerHTML = `
-                        <tr>
-                            <td colspan="11" style="padding: 40px; text-align: center; color: var(--text-muted);">
-                                <i class="fas fa-database" style="font-size: 2rem; margin-bottom: 10px; display: block;"></i>
-                                No performance data available for this period
-                            </td>
-                        </tr>
-                    `;
+                if (!name) {
+                    this.showToast('Please enter agent name', 'error');
                     return;
                 }
 
-                tbody.innerHTML = filteredData.map(data => {
-                    const agent = this.agents.find(a => a.id === data.agentId);
-                    if (!agent) return '';
+                // Generate new agent ID
+                const maxId = Math.max(...this.agents.map(a => parseInt(a.agentId)), 200);
+                const newAgentId = (maxId + 1).toString();
 
-                    const answerRate = data.answerRate;
+                // Calculate upsell revenue (average of $30 per successful upsell)
+                const upsellRevenue = upsellSuccess * 30;
+
+                // Create new agent
+                const newAgent = {
+                    id: this.agents.length + 1,
+                    agentId: newAgentId,
+                    name: name,
+                    totalRings: 0,
+                    answered: 0,
+                    missed: 0,
+                    avgWait: '0:00',
+                    maxWait: '0:00',
+                    avgTalk: '0:00',
+                    totalTalk: '0:00:00',
+                    orders: orders,
+                    sales: sales,
+                    target: target,
+                    upsellAttempts: upsellAttempts,
+                    upsellSuccess: upsellSuccess,
+                    upsellRevenue: upsellRevenue,
+                    period: this.currentPeriod
+                };
+
+                // Add to agents array
+                this.agents.push(newAgent);
+
+                // Clear form
+                document.getElementById('newAgentName').value = '';
+                document.getElementById('newAgentOrders').value = '';
+                document.getElementById('newAgentSales').value = '';
+                document.getElementById('newAgentTarget').value = '';
+                document.getElementById('newAgentUpsellAttempts').value = '';
+                document.getElementById('newAgentUpsellSuccess').value = '';
+
+                // Update UI
+                this.renderAgentTable();
+                this.renderUpsellTable();
+                this.updateKPIs();
+                this.renderCharts();
+                
+                // Save to storage
+                this.saveToStorage();
+                
+                this.showToast(`Agent ${name} added successfully!`, 'success');
+            },
+
+            // Delete Agent
+            deleteAgent: function(agentId) {
+                if (confirm('Are you sure you want to delete this agent? This action cannot be undone.')) {
+                    const agentIndex = this.agents.findIndex(a => a.id === agentId);
+                    if (agentIndex !== -1) {
+                        const agentName = this.agents[agentIndex].name;
+                        this.agents.splice(agentIndex, 1);
+                        
+                        // Update UI
+                        this.renderAgentTable();
+                        this.renderUpsellTable();
+                        this.updateKPIs();
+                        this.renderCharts();
+                        
+                        // Save to storage
+                        this.saveToStorage();
+                        
+                        this.showToast(`Agent ${agentName} deleted successfully!`, 'success');
+                    }
+                }
+            },
+
+            // Calculate Answer Rate
+            calculateAnswerRate: function(agent) {
+                if (agent.totalRings > 0) {
+                    return ((agent.answered / agent.totalRings) * 100).toFixed(2);
+                }
+                return 0;
+            },
+
+            // Calculate Achievement Percentage
+            calculateAchievement: function(agent) {
+                if (agent.target > 0) {
+                    return ((agent.sales / agent.target) * 100).toFixed(2);
+                }
+                return 0;
+            },
+
+            // Calculate Upsell Rate
+            calculateUpsellRate: function(agent) {
+                if (agent.upsellAttempts > 0) {
+                    return ((agent.upsellSuccess / agent.upsellAttempts) * 100).toFixed(2);
+                }
+                return 0;
+            },
+
+            // Calculate Average Upsell Value
+            calculateAvgUpsellValue: function(agent) {
+                if (agent.upsellSuccess > 0) {
+                    return (agent.upsellRevenue / agent.upsellSuccess).toFixed(2);
+                }
+                return 0;
+            },
+
+            // Get Performance Level
+            getPerformanceLevel: function(answerRate) {
+                if (answerRate >= 45) return 'high';
+                if (answerRate >= 35) return 'medium';
+                return 'low';
+            },
+
+            // Get Achievement Level
+            getAchievementLevel: function(achievement) {
+                if (achievement >= 100) return 'high';
+                if (achievement >= 80) return 'medium';
+                return 'low';
+            },
+
+            // Get Upsell Level
+            getUpsellLevel: function(upsellRate) {
+                if (upsellRate >= 35) return 'high';
+                if (upsellRate >= 25) return 'medium';
+                return 'low';
+            },
+
+            // Render Agent Table
+            renderAgentTable: function() {
+                const tbody = document.getElementById('agentTableBody');
+                const filteredAgents = this.agents.filter(agent => 
+                    this.currentPeriod === 'all' || agent.period === this.currentPeriod
+                );
+
+                tbody.innerHTML = filteredAgents.map(agent => {
+                    const answerRate = this.calculateAnswerRate(agent);
+                    const performanceLevel = this.getPerformanceLevel(answerRate);
+                    const achievement = this.calculateAchievement(agent);
+                    const achievementLevel = this.getAchievementLevel(achievement);
+                    
                     let rateClass = 'rate-low';
                     if (answerRate >= 45) rateClass = 'rate-high';
                     else if (answerRate >= 35) rateClass = 'rate-medium';
 
                     let perfIcon = 'performance-low';
-                    if (answerRate >= 45) perfIcon = 'performance-high';
-                    else if (answerRate >= 35) perfIcon = 'performance-medium';
+                    if (performanceLevel === 'high') perfIcon = 'performance-high';
+                    else if (performanceLevel === 'medium') perfIcon = 'performance-medium';
+
+                    let achievementClass = 'achievement-low';
+                    if (achievement >= 100) achievementClass = 'achievement-high';
+                    else if (achievement >= 80) achievementClass = 'achievement-medium';
 
                     return `
-                        <tr data-agent-id="${data.agentId}">
-                            <td><strong>${agent.code} – ${agent.name}</strong></td>
+                        <tr data-agent-id="${agent.id}">
+                            <td><strong>${agent.agentId} – ${agent.name}</strong></td>
+                            <td class="editable-cell" data-field="totalRings" contenteditable="true">${agent.totalRings.toLocaleString()}</td>
+                            <td class="editable-cell" data-field="answered" contenteditable="true">${agent.answered.toLocaleString()}</td>
+                            <td class="editable-cell" data-field="missed" contenteditable="true">${agent.missed.toLocaleString()}</td>
+                            <td class="editable-cell" data-field="avgWait" contenteditable="true">${agent.avgWait}</td>
+                            <td class="editable-cell" data-field="maxWait" contenteditable="true">${agent.maxWait}</td>
+                            <td class="editable-cell" data-field="avgTalk" contenteditable="true">${agent.avgTalk}</td>
+                            <td class="editable-cell" data-field="totalTalk" contenteditable="true">${agent.totalTalk}</td>
+                            <td class="editable-cell" data-field="orders" contenteditable="true">${agent.orders.toLocaleString()}</td>
+                            <td class="editable-cell" data-field="sales" contenteditable="true">$${agent.sales.toLocaleString()}</td>
+                            <td class="editable-cell" data-field="target" contenteditable="true">$${agent.target.toLocaleString()}</td>
                             <td>
-                                <div class="editable-cell" 
-                                     data-field="totalRings" 
-                                     data-agent-id="${data.agentId}"
-                                     onclick="AgentSystem.startEdit(this)">
-                                    ${data.totalRings.toLocaleString()}
-                                </div>
+                                <span class="achievement-badge ${achievementClass}" id="achievement-${agent.id}">
+                                    ${achievement}%
+                                </span>
                             </td>
                             <td>
-                                <div class="editable-cell" 
-                                     data-field="answered" 
-                                     data-agent-id="${data.agentId}"
-                                     onclick="AgentSystem.startEdit(this)">
-                                    ${data.answered.toLocaleString()}
-                                </div>
-                            </td>
-                            <td>
-                                <div class="editable-cell" 
-                                     data-field="missed" 
-                                     data-agent-id="${data.agentId}"
-                                     onclick="AgentSystem.startEdit(this)">
-                                    ${data.missed.toLocaleString()}
-                                </div>
-                            </td>
-                            <td>
-                                <div class="editable-cell" 
-                                     data-field="avgWait" 
-                                     data-agent-id="${data.agentId}"
-                                     onclick="AgentSystem.startEdit(this)">
-                                    ${data.avgWait}
-                                </div>
-                            </td>
-                            <td>
-                                <div class="editable-cell" 
-                                     data-field="maxWait" 
-                                     data-agent-id="${data.agentId}"
-                                     onclick="AgentSystem.startEdit(this)">
-                                    ${data.maxWait}
-                                </div>
-                            </td>
-                            <td>
-                                <div class="editable-cell" 
-                                     data-field="avgTalk" 
-                                     data-agent-id="${data.agentId}"
-                                     onclick="AgentSystem.startEdit(this)">
-                                    ${data.avgTalk}
-                                </div>
-                            </td>
-                            <td>
-                                <div class="editable-cell" 
-                                     data-field="totalTalk" 
-                                     data-agent-id="${data.agentId}"
-                                     onclick="AgentSystem.startEdit(this)">
-                                    ${data.totalTalk}
-                                </div>
-                            </td>
-                            <td>
-                                <span class="rate-badge ${rateClass}" id="rate-${data.agentId}">
-                                    ${answerRate.toFixed(2)}%
+                                <span class="answer-rate-badge ${rateClass}" id="rate-${agent.id}">
+                                    ${answerRate}%
                                 </span>
                             </td>
                             <td>
                                 <span class="performance-indicator ${perfIcon}"></span>
-                                ${this.getPerformanceLevel(answerRate)}
+                                ${performanceLevel.charAt(0).toUpperCase() + performanceLevel.slice(1)}
                             </td>
                             <td>
-                                <button class="btn btn-sm btn-secondary" 
-                                        onclick="AgentSystem.editAgent(${data.agentId})"
-                                        style="padding: 4px 8px; font-size: 0.75rem;">
-                                    <i class="fas fa-edit"></i>
+                                <button class="btn btn-sm btn-danger" onclick="AgentDashboard.deleteAgent(${agent.id})">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                }).join('');
+
+                // Add event listeners to editable cells
+                this.setupEditableCells();
+            },
+
+            // Render Upsell Table
+            renderUpsellTable: function() {
+                const tbody = document.getElementById('upsellTableBody');
+                const filteredAgents = this.agents.filter(agent => 
+                    this.currentPeriod === 'all' || agent.period === this.currentPeriod
+                );
+
+                tbody.innerHTML = filteredAgents.map(agent => {
+                    const upsellRate = this.calculateUpsellRate(agent);
+                    const upsellLevel = this.getUpsellLevel(upsellRate);
+                    const avgUpsellValue = this.calculateAvgUpsellValue(agent);
+                    
+                    let upsellClass = 'rate-low';
+                    if (upsellRate >= 35) upsellClass = 'rate-high';
+                    else if (upsellRate >= 25) upsellClass = 'rate-medium';
+
+                    let upsellIcon = 'performance-low';
+                    if (upsellLevel === 'high') upsellIcon = 'performance-high';
+                    else if (upsellLevel === 'medium') upsellIcon = 'performance-medium';
+
+                    return `
+                        <tr data-agent-id="${agent.id}">
+                            <td><strong>${agent.agentId} – ${agent.name}</strong></td>
+                            <td>${agent.upsellAttempts.toLocaleString()}</td>
+                            <td>${agent.upsellSuccess.toLocaleString()}</td>
+                            <td>
+                                <span class="answer-rate-badge ${upsellClass}">
+                                    ${upsellRate}%
+                                </span>
+                            </td>
+                            <td>$${agent.upsellRevenue.toLocaleString()}</td>
+                            <td>$${avgUpsellValue}</td>
+                            <td>
+                                <span class="performance-indicator ${upsellIcon}"></span>
+                                ${upsellLevel.charAt(0).toUpperCase() + upsellLevel.slice(1)}
+                            </td>
+                            <td>
+                                <button class="btn btn-sm btn-danger" onclick="AgentDashboard.deleteAgent(${agent.id})">
+                                    <i class="fas fa-trash"></i>
                                 </button>
                             </td>
                         </tr>
@@ -1571,491 +1677,385 @@
                 }).join('');
             },
 
-            // Start Editing a Cell
-            startEdit: function(cell) {
-                if (this.editingCell) {
-                    this.finishEdit(this.editingCell);
-                }
-
-                this.editingCell = cell;
-                cell.classList.add('editing');
+            // Setup Editable Cells
+            setupEditableCells: function() {
+                const editableCells = document.querySelectorAll('.editable-cell');
                 
-                const currentValue = cell.textContent.trim();
-                const input = document.createElement('input');
-                input.type = 'text';
-                input.value = currentValue;
-                input.style.width = '100%';
-                input.style.textAlign = 'center';
-                input.style.border = 'none';
-                input.style.background = 'transparent';
-                input.style.fontSize = 'inherit';
-                input.style.fontFamily = 'inherit';
-                
-                cell.innerHTML = '';
-                cell.appendChild(input);
-                input.focus();
-                input.select();
-                
-                // Handle input events
-                input.addEventListener('blur', () => this.finishEdit(cell));
-                input.addEventListener('keydown', (e) => {
-                    if (e.key === 'Enter') {
-                        this.finishEdit(cell);
-                    } else if (e.key === 'Escape') {
-                        cell.innerHTML = currentValue;
-                        cell.classList.remove('editing');
-                        this.editingCell = null;
-                    }
+                editableCells.forEach(cell => {
+                    // Remove existing listeners
+                    cell.removeEventListener('focus', this.handleCellFocus);
+                    cell.removeEventListener('blur', this.handleCellBlur);
+                    cell.removeEventListener('keydown', this.handleCellKeydown);
+                    
+                    // Add new listeners
+                    cell.addEventListener('focus', this.handleCellFocus.bind(this));
+                    cell.addEventListener('blur', this.handleCellBlur.bind(this));
+                    cell.addEventListener('keydown', this.handleCellKeydown.bind(this));
                 });
             },
 
-            // Finish Editing a Cell
-            finishEdit: function(cell) {
-                if (!cell.classList.contains('editing')) return;
+            // Handle Cell Focus
+            handleCellFocus: function(e) {
+                e.target.classList.add('editing');
+                e.target.dataset.originalValue = e.target.textContent;
+            },
 
-                const input = cell.querySelector('input');
-                const newValue = input.value.trim();
+            // Handle Cell Blur
+            handleCellBlur: function(e) {
+                e.target.classList.remove('editing');
+                this.updateAgentData(e.target);
+            },
+
+            // Handle Cell Keydown
+            handleCellKeydown: function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    e.target.blur();
+                } else if (e.key === 'Escape') {
+                    e.target.textContent = e.target.dataset.originalValue;
+                    e.target.blur();
+                }
+            },
+
+            // Update Agent Data
+            updateAgentData: function(cell) {
+                const row = cell.closest('tr');
+                const agentId = parseInt(row.dataset.agentId);
                 const field = cell.dataset.field;
-                const agentId = parseInt(cell.dataset.agentId);
+                let value = cell.textContent.trim();
 
-                // Find the performance data
-                const dataIndex = this.performanceData.findIndex(d => 
-                    d.agentId === agentId && d.period === this.currentPeriod
-                );
+                // Find agent
+                const agent = this.agents.find(a => a.id === agentId);
+                if (!agent) return;
 
-                if (dataIndex === -1) {
-                    console.error('Performance data not found for agent:', agentId);
-                    return;
+                // Parse value based on field type
+                if (field === 'totalRings' || field === 'answered' || field === 'missed' || field === 'orders') {
+                    value = parseInt(value.replace(/,/g, '')) || 0;
+                    
+                    // Auto-calculate missed if needed
+                    if (field === 'totalRings' || field === 'answered') {
+                        agent.missed = Math.max(0, agent.totalRings - agent.answered);
+                    }
+                } else if (field === 'sales' || field === 'target') {
+                    value = parseFloat(value.replace(/[$,]/g, '')) || 0;
                 }
 
-                const data = this.performanceData[dataIndex];
-                const oldValue = data[field];
-
-                // Validate and convert based on field type
-                let processedValue = newValue;
-                if (field === 'totalRings' || field === 'answered' || field === 'missed') {
-                    processedValue = parseInt(newValue.replace(/,/g, '')) || 0;
-                }
-
-                // Update the data
-                data[field] = processedValue;
-                data.lastUpdated = new Date().toISOString();
-
-                // Recalculate derived fields
-                this.recalculateAgentMetrics(agentId);
-
-                // Update the display
-                this.updateCellDisplay(cell, field, data);
-
-                cell.classList.remove('editing');
-                this.editingCell = null;
+                // Update agent data
+                agent[field] = value;
+                
+                // Mark as dirty
                 this.isDirty = true;
 
-                // Update KPIs and chart
+                // Update answer rate and performance
+                this.updateAgentPerformance(agentId);
+
+                // Update KPIs
                 this.updateKPIs();
-                this.updatePerformanceChart();
-                
-                this.showToast(`${field} updated for agent ${agentId}`);
+
+                // Update charts
+                this.renderCharts();
+
+                // Show toast
+                this.showToast(`${agent.name}'s ${field} updated`);
             },
 
-            // Recalculate Agent Metrics
-            recalculateAgentMetrics: function(agentId) {
-                const dataIndex = this.performanceData.findIndex(d => 
-                    d.agentId === agentId && d.period === this.currentPeriod
-                );
+            // Update Agent Performance
+            updateAgentPerformance: function(agentId) {
+                const agent = this.agents.find(a => a.id === agentId);
+                if (!agent) return;
 
-                if (dataIndex === -1) return;
-
-                const data = this.performanceData[dataIndex];
-
-                // Calculate missed calls
-                data.missed = Math.max(0, data.totalRings - data.answered);
-
-                // Calculate answer rate
-                data.answerRate = data.totalRings > 0 ? 
-                    ((data.answered / data.totalRings) * 100) : 0;
-
-                // Update display
-                this.updateAgentDisplay(agentId);
-            },
-
-            // Update Cell Display
-            updateCellDisplay: function(cell, field, data) {
-                let displayValue = data[field];
+                const answerRate = this.calculateAnswerRate(agent);
+                const performanceLevel = this.getPerformanceLevel(answerRate);
+                const achievement = this.calculateAchievement(agent);
+                const achievementLevel = this.getAchievementLevel(achievement);
                 
-                if (field === 'totalRings' || field === 'answered' || field === 'missed') {
-                    displayValue = displayValue.toLocaleString();
-                }
-                
-                cell.innerHTML = displayValue;
-            },
-
-            // Update Agent Display
-            updateAgentDisplay: function(agentId) {
-                const data = this.performanceData.find(d => 
-                    d.agentId === agentId && d.period === this.currentPeriod
-                );
-
-                if (!data) return;
-
-                const answerRate = data.answerRate;
                 let rateClass = 'rate-low';
                 if (answerRate >= 45) rateClass = 'rate-high';
                 else if (answerRate >= 35) rateClass = 'rate-medium';
 
-                // Update answer rate badge
-                const rateBadge = document.getElementById(`rate-${agentId}`);
-                if (rateBadge) {
-                    rateBadge.textContent = `${answerRate.toFixed(2)}%`;
-                    rateBadge.className = `rate-badge ${rateClass}`;
+                let perfIcon = 'performance-low';
+                if (performanceLevel === 'high') perfIcon = 'performance-high';
+                else if (performanceLevel === 'medium') perfIcon = 'performance-medium';
+
+                let achievementClass = 'achievement-low';
+                if (achievement >= 100) achievementClass = 'achievement-high';
+                else if (achievement >= 80) achievementClass = 'achievement-medium';
+
+                // Update answer rate cell
+                const rateCell = document.getElementById(`rate-${agentId}`);
+                if (rateCell) {
+                    rateCell.textContent = `${answerRate}%`;
+                    rateCell.className = `answer-rate-badge ${rateClass}`;
                 }
 
-                // Update performance level
+                // Update achievement cell
+                const achievementCell = document.getElementById(`achievement-${agentId}`);
+                if (achievementCell) {
+                    achievementCell.textContent = `${achievement}%`;
+                    achievementCell.className = `achievement-badge ${achievementClass}`;
+                }
+
+                // Update performance cell
                 const row = document.querySelector(`tr[data-agent-id="${agentId}"]`);
                 if (row) {
-                    const perfCell = row.querySelector('td:nth-child(10)');
+                    const perfCell = row.querySelector('td:nth-child(14)');
                     if (perfCell) {
-                        let perfIcon = 'performance-low';
-                        if (answerRate >= 45) perfIcon = 'performance-high';
-                        else if (answerRate >= 35) perfIcon = 'performance-medium';
-
                         perfCell.innerHTML = `
                             <span class="performance-indicator ${perfIcon}"></span>
-                            ${this.getPerformanceLevel(answerRate)}
+                            ${performanceLevel.charAt(0).toUpperCase() + performanceLevel.slice(1)}
                         `;
                     }
                 }
             },
 
-            // Get Performance Level
-            getPerformanceLevel: function(rate) {
-                if (rate >= 45) return 'High';
-                if (rate >= 35) return 'Medium';
-                return 'Low';
-            },
-
-            // Get Filtered Data
-            getFilteredData: function() {
-                return this.performanceData.filter(d => 
-                    this.currentPeriod === 'all' || d.period === this.currentPeriod
+            // Update KPIs
+            updateKPIs: function() {
+                const filteredAgents = this.agents.filter(agent => 
+                    this.currentPeriod === 'all' || agent.period === this.currentPeriod
                 );
-            },
 
-            // Set Period
-            setPeriod: function(period) {
-                this.currentPeriod = period;
+                if (filteredAgents.length === 0) return;
+
+                // Calculate totals
+                const totalCalls = filteredAgents.reduce((sum, agent) => sum + agent.totalRings, 0);
+                const totalAnswered = filteredAgents.reduce((sum, agent) => sum + agent.answered, 0);
+                const totalSales = filteredAgents.reduce((sum, agent) => sum + agent.sales, 0);
+                const totalUpsellRevenue = filteredAgents.reduce((sum, agent) => sum + agent.upsellRevenue, 0);
+                const totalUpsellAttempts = filteredAgents.reduce((sum, agent) => sum + agent.upsellAttempts, 0);
+                const totalUpsellSuccess = filteredAgents.reduce((sum, agent) => sum + agent.upsellSuccess, 0);
                 
-                // Update period selector
-                document.querySelectorAll('.period-option').forEach(option => {
-                    option.classList.remove('active');
-                });
-                event?.currentTarget?.classList.add('active');
+                // Calculate average answer rate
+                const avgAnswerRate = totalCalls > 0 ? ((totalAnswered / totalCalls) * 100).toFixed(1) : 0;
+                const avgUpsellRate = totalUpsellAttempts > 0 ? ((totalUpsellSuccess / totalUpsellAttempts) * 100).toFixed(1) : 0;
+
+                // Find top performers
+                let topAgent = filteredAgents[0];
+                let topRate = this.calculateAnswerRate(topAgent);
                 
-                // Update dashboard
-                this.renderDashboard();
-                this.renderPerformanceTable();
+                let topUpseller = filteredAgents[0];
+                let topUpsellRate = this.calculateUpsellRate(topUpseller);
                 
-                this.showToast(`Viewing data for: ${period.replace('-', ' ')}`);
-            },
-
-            // File Upload Handling
-            handleFileUpload: function(event) {
-                const file = event.target.files[0];
-                if (!file) return;
-
-                this.showLoading(true);
-
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    try {
-                        const data = new Uint8Array(e.target.result);
-                        const workbook = XLSX.read(data, { type: 'array' });
-                        const worksheet = workbook.Sheets[workbook.SheetNames[0]];
-                        const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
-                        
-                        this.processUploadedData(jsonData);
-                    } catch (error) {
-                        console.error('Error reading file:', error);
-                        this.showToast('Error reading file. Please check the format.', 'error');
-                        this.showLoading(false);
+                filteredAgents.forEach(agent => {
+                    const rate = this.calculateAnswerRate(agent);
+                    if (rate > topRate) {
+                        topAgent = agent;
+                        topRate = rate;
                     }
-                };
+                    
+                    const upsellRate = this.calculateUpsellRate(agent);
+                    if (upsellRate > topUpsellRate) {
+                        topUpseller = agent;
+                        topUpsellRate = upsellRate;
+                    }
+                });
+
+                // Calculate average wait time (convert to seconds, average, then back to MM:SS)
+                const totalWaitSeconds = filteredAgents.reduce((sum, agent) => {
+                    const [min, sec] = agent.avgWait.split(':').map(Number);
+                    return sum + (min * 60) + (sec || 0);
+                }, 0);
                 
-                reader.readAsArrayBuffer(file);
+                const avgWaitSeconds = Math.round(totalWaitSeconds / filteredAgents.length);
+                const avgWaitFormatted = `${Math.floor(avgWaitSeconds / 60)}:${(avgWaitSeconds % 60).toString().padStart(2, '0')}`;
+
+                // Update KPI cards
+                document.getElementById('kpi-total-calls').textContent = totalCalls.toLocaleString();
+                document.getElementById('kpi-answer-rate').textContent = `${avgAnswerRate}%`;
+                document.getElementById('kpi-total-sales').textContent = `$${totalSales.toLocaleString()}`;
+                document.getElementById('kpi-top-agent').textContent = topAgent.name.split(' ')[0];
+                
+                // Update Upsell KPIs
+                document.getElementById('kpi-upsell-revenue').textContent = `$${totalUpsellRevenue.toLocaleString()}`;
+                document.getElementById('kpi-upsell-rate').textContent = `${avgUpsellRate}%`;
+                document.getElementById('kpi-upsell-attempts').textContent = totalUpsellAttempts.toLocaleString();
+                document.getElementById('kpi-upsell-top-agent').textContent = topUpseller.name.split(' ')[0];
+                document.getElementById('kpi-top-upseller').textContent = topUpseller.name.split(' ')[0];
             },
 
-            // Process Uploaded Data
-            processUploadedData: function(data) {
-                try {
-                    // Skip header row
-                    const rows = data.slice(1);
-                    
-                    rows.forEach((row, index) => {
-                        if (row.length >= 8) {
-                            const agentStr = row[0]?.toString() || '';
-                            const agentMatch = agentStr.match(/(\d+)\s*–\s*(.+)/);
-                            
-                            if (agentMatch) {
-                                const agentCode = agentMatch[1];
-                                const agentName = agentMatch[2].trim();
-                                
-                                // Find or create agent
-                                let agent = this.agents.find(a => a.code === agentCode);
-                                if (!agent) {
-                                    agent = {
-                                        id: this.agents.length + 1,
-                                        code: agentCode,
-                                        name: agentName,
-                                        active: true,
-                                        target: 45
-                                    };
-                                    this.agents.push(agent);
-                                }
-                                
-                                // Parse performance data
-                                const performanceData = {
-                                    agentId: agent.id,
-                                    period: this.currentPeriod,
-                                    totalRings: parseInt(row[1]) || 0,
-                                    answered: parseInt(row[2]) || 0,
-                                    missed: parseInt(row[3]) || 0,
-                                    avgWait: row[4]?.toString() || '0:00',
-                                    maxWait: row[5]?.toString() || '0:00',
-                                    avgTalk: row[6]?.toString() || '0:00',
-                                    totalTalk: row[7]?.toString() || '0:00:00',
-                                    answerRate: 0, // Will be calculated
-                                    lastUpdated: new Date().toISOString()
-                                };
-                                
-                                // Calculate answer rate
-                                performanceData.answerRate = performanceData.totalRings > 0 ? 
-                                    ((performanceData.answered / performanceData.totalRings) * 100) : 0;
-                                
-                                // Update or add performance data
-                                const existingIndex = this.performanceData.findIndex(d => 
-                                    d.agentId === agent.id && d.period === this.currentPeriod
-                                );
-                                
-                                if (existingIndex >= 0) {
-                                    this.performanceData[existingIndex] = performanceData;
-                                } else {
-                                    this.performanceData.push(performanceData);
+            // Render Charts
+            renderCharts: function() {
+                const ctx = document.getElementById('performanceChart');
+                if (!ctx) return;
+
+                const filteredAgents = this.agents.filter(agent => 
+                    this.currentPeriod === 'all' || agent.period === this.currentPeriod
+                );
+
+                // Destroy existing chart
+                if (this.chart) {
+                    this.chart.destroy();
+                }
+
+                // Prepare data
+                const labels = filteredAgents.map(agent => agent.name);
+                const answerRates = filteredAgents.map(agent => parseFloat(this.calculateAnswerRate(agent)));
+                const achievements = filteredAgents.map(agent => parseFloat(this.calculateAchievement(agent)));
+                const sales = filteredAgents.map(agent => agent.sales);
+
+                // Create chart
+                this.chart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [
+                            {
+                                label: 'Answer Rate (%)',
+                                data: answerRates,
+                                backgroundColor: 'rgba(54, 162, 235, 0.7)',
+                                borderColor: 'rgba(54, 162, 235, 1)',
+                                borderWidth: 1,
+                                yAxisID: 'y',
+                                type: 'line',
+                                fill: false,
+                                tension: 0.4
+                            },
+                            {
+                                label: 'Achievement (%)',
+                                data: achievements,
+                                backgroundColor: 'rgba(75, 192, 192, 0.7)',
+                                borderColor: 'rgba(75, 192, 192, 1)',
+                                borderWidth: 1,
+                                yAxisID: 'y',
+                                type: 'line',
+                                fill: false,
+                                tension: 0.4
+                            },
+                            {
+                                label: 'Sales ($)',
+                                data: sales,
+                                backgroundColor: 'rgba(255, 206, 86, 0.7)',
+                                borderColor: 'rgba(255, 206, 86, 1)',
+                                borderWidth: 1,
+                                yAxisID: 'y1'
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                type: 'linear',
+                                display: true,
+                                position: 'left',
+                                title: {
+                                    display: true,
+                                    text: 'Percentage (%)'
+                                },
+                                min: 0,
+                                max: 100
+                            },
+                            y1: {
+                                type: 'linear',
+                                display: true,
+                                position: 'right',
+                                title: {
+                                    display: true,
+                                    text: 'Sales ($)'
+                                },
+                                grid: {
+                                    drawOnChartArea: false
                                 }
                             }
+                        },
+                        plugins: {
+                            legend: {
+                                position: 'top',
+                            },
+                            tooltip: {
+                                mode: 'index',
+                                intersect: false
+                            }
                         }
-                    });
-                    
-                    this.saveData();
-                    this.renderDashboard();
-                    this.renderPerformanceTable();
-                    this.showLoading(false);
-                    this.showToast(`Successfully uploaded ${rows.length} records!`, 'success');
-                    
-                } catch (error) {
-                    console.error('Error processing data:', error);
-                    this.showLoading(false);
-                    this.showToast('Error processing file data. Please check the format.', 'error');
-                }
+                    }
+                });
             },
 
-            // Download Template
-            downloadTemplate: function() {
-                const templateData = [
-                    ['Agent', 'Total Rings', 'Answered', 'Missed', 'Avg Wait', 'Max Wait', 'Avg Talk', 'Total Talk'],
-                    ['201 – Nirjala', '3061', '656', '2405', '0:08', '3:32', '1:28', '16:09:29'],
-                    ['202 – Saleh Emad', '559', '144', '415', '0:04', '0:42', '1:32', '3:40:48'],
-                    ['203 – Nona Rose', '2072', '1017', '1055', '0:07', '7:49', '1:44', '29:39:10']
-                ];
-                
-                const worksheet = XLSX.utils.aoa_to_sheet(templateData);
-                const workbook = XLSX.utils.book_new();
-                XLSX.utils.book_append_sheet(workbook, worksheet, 'Template');
-                
-                XLSX.writeFile(workbook, 'agent_performance_template.xlsx');
-                this.showToast('Template downloaded successfully!');
-            },
+            // Render Upsell Chart
+            renderUpsellChart: function() {
+                const ctx = document.getElementById('upsellChart');
+                if (!ctx) return;
 
-            // Open Upload Modal
-            openUploadModal: function() {
-                document.getElementById('uploadModal').classList.add('show');
-            },
-
-            // Process Upload
-            processUpload: function() {
-                const fileInput = document.getElementById('modalFileInput');
-                const periodSelect = document.getElementById('uploadPeriod');
-                
-                if (!fileInput.files.length) {
-                    this.showToast('Please select a file first', 'error');
-                    return;
-                }
-                
-                this.currentPeriod = periodSelect.value;
-                this.handleFileUpload({ target: fileInput });
-                this.closeModal();
-            },
-
-            // Manual Entry
-            processManualEntry: function() {
-                document.getElementById('manualEntryModal').classList.add('show');
-            },
-
-            // Calculate Entry Metrics
-            calculateEntryMetrics: function() {
-                const rings = parseInt(document.getElementById('entryRings').value) || 0;
-                const answered = parseInt(document.getElementById('entryAnswered').value) || 0;
-                const avgTalk = document.getElementById('entryAvgTalk').value;
-                
-                // Calculate missed
-                const missed = Math.max(0, rings - answered);
-                
-                // Calculate answer rate
-                const answerRate = rings > 0 ? ((answered / rings) * 100).toFixed(2) : 0;
-                
-                // Calculate total talk time
-                let totalTalk = '0:00:00';
-                if (avgTalk) {
-                    const [min, sec] = avgTalk.split(':').map(Number);
-                    const totalSeconds = (min * 60 + (sec || 0)) * answered;
-                    const hours = Math.floor(totalSeconds / 3600);
-                    const minutes = Math.floor((totalSeconds % 3600) / 60);
-                    const seconds = totalSeconds % 60;
-                    totalTalk = `${hours}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-                }
-                
-                // Update display
-                document.getElementById('calcAnswerRate').textContent = `${answerRate}%`;
-                document.getElementById('calcMissed').textContent = missed;
-                document.getElementById('calcTotalTalk').textContent = totalTalk;
-            },
-
-            // Save Manual Entry
-            saveManualEntry: function() {
-                const agentStr = document.getElementById('entryAgent').value;
-                const rings = parseInt(document.getElementById('entryRings').value);
-                const answered = parseInt(document.getElementById('entryAnswered').value);
-                const avgWait = document.getElementById('entryAvgWait').value;
-                const avgTalk = document.getElementById('entryAvgTalk').value;
-                
-                if (!agentStr || !rings || !answered || !avgWait || !avgTalk) {
-                    this.showToast('Please fill all required fields', 'error');
-                    return;
-                }
-                
-                const agentMatch = agentStr.match(/(\d+)\s*–\s*(.+)/);
-                if (!agentMatch) {
-                    this.showToast('Invalid agent format', 'error');
-                    return;
-                }
-                
-                const agentCode = agentMatch[1];
-                const agentName = agentMatch[2].trim();
-                
-                // Find or create agent
-                let agent = this.agents.find(a => a.code === agentCode);
-                if (!agent) {
-                    agent = {
-                        id: this.agents.length + 1,
-                        code: agentCode,
-                        name: agentName,
-                        active: true,
-                        target: 45
-                    };
-                    this.agents.push(agent);
-                }
-                
-                // Calculate derived values
-                const missed = Math.max(0, rings - answered);
-                const answerRate = rings > 0 ? ((answered / rings) * 100) : 0;
-                
-                // Calculate total talk time
-                const [min, sec] = avgTalk.split(':').map(Number);
-                const totalSeconds = (min * 60 + (sec || 0)) * answered;
-                const hours = Math.floor(totalSeconds / 3600);
-                const minutes = Math.floor((totalSeconds % 3600) / 60);
-                const seconds = totalSeconds % 60;
-                const totalTalk = `${hours}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-                
-                // Create performance data
-                const performanceData = {
-                    agentId: agent.id,
-                    period: this.currentPeriod,
-                    totalRings: rings,
-                    answered: answered,
-                    missed: missed,
-                    avgWait: avgWait,
-                    maxWait: avgWait, // Use avg as max for manual entry
-                    avgTalk: avgTalk,
-                    totalTalk: totalTalk,
-                    answerRate: answerRate,
-                    lastUpdated: new Date().toISOString()
-                };
-                
-                // Update or add performance data
-                const existingIndex = this.performanceData.findIndex(d => 
-                    d.agentId === agent.id && d.period === this.currentPeriod
+                const filteredAgents = this.agents.filter(agent => 
+                    this.currentPeriod === 'all' || agent.period === this.currentPeriod
                 );
-                
-                if (existingIndex >= 0) {
-                    this.performanceData[existingIndex] = performanceData;
-                } else {
-                    this.performanceData.push(performanceData);
-                }
-                
-                this.saveData();
-                this.renderDashboard();
-                this.renderPerformanceTable();
-                this.closeModal();
-                this.showToast(`Manual entry saved for ${agentName}!`, 'success');
-            },
 
-            // Finalize Report
-            finalizeReport: function() {
-                if (confirm('Are you sure you want to finalize this report? This will lock all data for this period.')) {
-                    this.reportStatus = 'final';
-                    this.updateReportStatus();
-                    this.saveData();
-                    this.showToast('Report finalized! Data is now locked for this period.', 'success');
+                // Destroy existing chart
+                if (this.upsellChart) {
+                    this.upsellChart.destroy();
                 }
-            },
 
-            // Update Report Status
-            updateReportStatus: function() {
-                const statusElement = document.getElementById('reportStatus');
-                const infoElement = document.getElementById('reportInfo');
-                
-                if (this.reportStatus === 'draft') {
-                    statusElement.textContent = 'DRAFT';
-                    statusElement.className = 'status-badge status-draft';
-                } else {
-                    statusElement.textContent = 'FINAL';
-                    statusElement.className = 'status-badge status-final';
-                }
-                
-                const periodText = {
-                    '21-days': '21 Days - Jan 2026',
-                    'monthly': 'Monthly - Jan 2026',
-                    'weekly': 'Weekly - Current',
-                    'all': 'All Data'
-                }[this.currentPeriod] || 'Current Period';
-                
-                infoElement.textContent = `Last edited: Just now • Period: ${periodText}`;
-            },
+                // Prepare data
+                const labels = filteredAgents.map(agent => agent.name);
+                const upsellRates = filteredAgents.map(agent => parseFloat(this.calculateUpsellRate(agent)));
+                const upsellRevenue = filteredAgents.map(agent => agent.upsellRevenue);
 
-            // Reset Edits
-            resetEdits: function() {
-                if (confirm('Are you sure you want to reset all unsaved changes?')) {
-                    this.loadData();
-                    this.renderDashboard();
-                    this.renderPerformanceTable();
-                    this.showToast('All changes reset to last saved state.');
-                }
-            },
-
-            // Save All Changes
-            saveAllChanges: function() {
-                this.saveData();
-                this.showToast('All changes saved successfully!', 'success');
+                // Create chart
+                this.upsellChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [
+                            {
+                                label: 'Upsell Success Rate (%)',
+                                data: upsellRates,
+                                backgroundColor: 'rgba(75, 192, 192, 0.7)',
+                                borderColor: 'rgba(75, 192, 192, 1)',
+                                borderWidth: 1,
+                                yAxisID: 'y',
+                                type: 'line',
+                                fill: false,
+                                tension: 0.4
+                            },
+                            {
+                                label: 'Upsell Revenue ($)',
+                                data: upsellRevenue,
+                                backgroundColor: 'rgba(153, 102, 255, 0.7)',
+                                borderColor: 'rgba(153, 102, 255, 1)',
+                                borderWidth: 1,
+                                yAxisID: 'y1'
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                type: 'linear',
+                                display: true,
+                                position: 'left',
+                                title: {
+                                    display: true,
+                                    text: 'Success Rate (%)'
+                                },
+                                min: 0,
+                                max: 100
+                            },
+                            y1: {
+                                type: 'linear',
+                                display: true,
+                                position: 'right',
+                                title: {
+                                    display: true,
+                                    text: 'Revenue ($)'
+                                },
+                                grid: {
+                                    drawOnChartArea: false
+                                }
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                position: 'top',
+                            },
+                            tooltip: {
+                                mode: 'index',
+                                intersect: false
+                            }
+                        }
+                    }
+                });
             },
 
             // Render Analytics
@@ -2063,39 +2063,61 @@
                 const ctx = document.getElementById('analyticsChart');
                 if (!ctx) return;
 
-                const filteredData = this.getFilteredData();
-                
                 // Destroy existing chart
-                if (this.charts.analytics) {
-                    this.charts.analytics.destroy();
+                if (this.analyticsChart) {
+                    this.analyticsChart.destroy();
                 }
 
-                // Prepare data for performance distribution
+                // Prepare data for analytics
                 const performanceLevels = {
-                    high: filteredData.filter(d => d.answerRate >= 45).length,
-                    medium: filteredData.filter(d => d.answerRate >= 35 && d.answerRate < 45).length,
-                    low: filteredData.filter(d => d.answerRate < 35).length
+                    high: this.agents.filter(agent => this.getPerformanceLevel(this.calculateAnswerRate(agent)) === 'high').length,
+                    medium: this.agents.filter(agent => this.getPerformanceLevel(this.calculateAnswerRate(agent)) === 'medium').length,
+                    low: this.agents.filter(agent => this.getPerformanceLevel(this.calculateAnswerRate(agent)) === 'low').length
+                };
+
+                const achievementLevels = {
+                    high: this.agents.filter(agent => this.getAchievementLevel(this.calculateAchievement(agent)) === 'high').length,
+                    medium: this.agents.filter(agent => this.getAchievementLevel(this.calculateAchievement(agent)) === 'medium').length,
+                    low: this.agents.filter(agent => this.getAchievementLevel(this.calculateAchievement(agent)) === 'low').length
                 };
 
                 // Create analytics chart
-                this.charts.analytics = new Chart(ctx, {
-                    type: 'pie',
+                this.analyticsChart = new Chart(ctx, {
+                    type: 'doughnut',
                     data: {
-                        labels: ['High Performance (≥45%)', 'Medium Performance (35-44%)', 'Low Performance (<35%)'],
-                        datasets: [{
-                            data: [performanceLevels.high, performanceLevels.medium, performanceLevels.low],
-                            backgroundColor: [
-                                'rgba(75, 192, 192, 0.7)',
-                                'rgba(255, 206, 86, 0.7)',
-                                'rgba(255, 99, 132, 0.7)'
-                            ],
-                            borderColor: [
-                                'rgba(75, 192, 192, 1)',
-                                'rgba(255, 206, 86, 1)',
-                                'rgba(255, 99, 132, 1)'
-                            ],
-                            borderWidth: 1
-                        }]
+                        labels: ['High Performance', 'Medium Performance', 'Low Performance'],
+                        datasets: [
+                            {
+                                label: 'Answer Rate',
+                                data: [performanceLevels.high, performanceLevels.medium, performanceLevels.low],
+                                backgroundColor: [
+                                    'rgba(75, 192, 192, 0.7)',
+                                    'rgba(255, 206, 86, 0.7)',
+                                    'rgba(255, 99, 132, 0.7)'
+                                ],
+                                borderColor: [
+                                    'rgba(75, 192, 192, 1)',
+                                    'rgba(255, 206, 86, 1)',
+                                    'rgba(255, 99, 132, 1)'
+                                ],
+                                borderWidth: 1
+                            },
+                            {
+                                label: 'Achievement',
+                                data: [achievementLevels.high, achievementLevels.medium, achievementLevels.low],
+                                backgroundColor: [
+                                    'rgba(54, 162, 235, 0.7)',
+                                    'rgba(153, 102, 255, 0.7)',
+                                    'rgba(255, 159, 64, 0.7)'
+                                ],
+                                borderColor: [
+                                    'rgba(54, 162, 235, 1)',
+                                    'rgba(153, 102, 255, 1)',
+                                    'rgba(255, 159, 64, 1)'
+                                ],
+                                borderWidth: 1
+                            }
+                        ]
                     },
                     options: {
                         responsive: true,
@@ -2107,7 +2129,7 @@
                             tooltip: {
                                 callbacks: {
                                     label: function(context) {
-                                        const label = context.label || '';
+                                        const label = context.dataset.label || '';
                                         const value = context.raw || 0;
                                         const total = context.dataset.data.reduce((a, b) => a + b, 0);
                                         const percentage = Math.round((value / total) * 100);
@@ -2125,155 +2147,275 @@
 
             // Generate Insights
             generateInsights: function() {
-                const filteredData = this.getFilteredData();
                 const container = document.getElementById('insightsContainer');
+                const filteredAgents = this.agents.filter(agent => 
+                    this.currentPeriod === 'all' || agent.period === this.currentPeriod
+                );
 
-                if (filteredData.length === 0) {
-                    container.innerHTML = '<p style="color: var(--text-muted); text-align: center;">No data available for insights.</p>';
+                if (filteredAgents.length === 0) {
+                    container.innerHTML = '<p>No data available for insights.</p>';
                     return;
                 }
 
                 // Calculate insights
-                const totalCalls = filteredData.reduce((sum, d) => sum + d.totalRings, 0);
-                const totalAnswered = filteredData.reduce((sum, d) => sum + d.answered, 0);
+                const totalCalls = filteredAgents.reduce((sum, agent) => sum + agent.totalRings, 0);
+                const totalAnswered = filteredAgents.reduce((sum, agent) => sum + agent.answered, 0);
+                const totalSales = filteredAgents.reduce((sum, agent) => sum + agent.sales, 0);
+                const totalTarget = filteredAgents.reduce((sum, agent) => sum + agent.target, 0);
+                const totalUpsellRevenue = filteredAgents.reduce((sum, agent) => sum + agent.upsellRevenue, 0);
+                
                 const overallAnswerRate = totalCalls > 0 ? ((totalAnswered / totalCalls) * 100).toFixed(1) : 0;
+                const overallAchievement = totalTarget > 0 ? ((totalSales / totalTarget) * 100).toFixed(1) : 0;
 
                 // Find top and bottom performers
-                let topPerformer = filteredData[0];
-                let bottomPerformer = filteredData[0];
-                let topRate = topPerformer.answerRate;
-                let bottomRate = bottomPerformer.answerRate;
+                let topPerformer = filteredAgents[0];
+                let bottomPerformer = filteredAgents[0];
+                let topRate = this.calculateAnswerRate(topPerformer);
+                let bottomRate = this.calculateAnswerRate(bottomPerformer);
 
-                filteredData.forEach(data => {
-                    if (data.answerRate > topRate) {
-                        topPerformer = data;
-                        topRate = data.answerRate;
+                let topSalesAgent = filteredAgents[0];
+                let topAchievement = this.calculateAchievement(topSalesAgent);
+
+                let topUpseller = filteredAgents[0];
+                let topUpsellRate = this.calculateUpsellRate(topUpseller);
+
+                filteredAgents.forEach(agent => {
+                    const rate = this.calculateAnswerRate(agent);
+                    if (rate > topRate) {
+                        topPerformer = agent;
+                        topRate = rate;
                     }
-                    if (data.answerRate < bottomRate) {
-                        bottomPerformer = data;
-                        bottomRate = data.answerRate;
+                    if (rate < bottomRate) {
+                        bottomPerformer = agent;
+                        bottomRate = rate;
+                    }
+                    
+                    const achievement = this.calculateAchievement(agent);
+                    if (achievement > topAchievement) {
+                        topSalesAgent = agent;
+                        topAchievement = achievement;
+                    }
+                    
+                    const upsellRate = this.calculateUpsellRate(agent);
+                    if (upsellRate > topUpsellRate) {
+                        topUpseller = agent;
+                        topUpsellRate = upsellRate;
                     }
                 });
-
-                const topAgent = this.agents.find(a => a.id === topPerformer.agentId);
-                const bottomAgent = this.agents.find(a => a.id === bottomPerformer.agentId);
 
                 // Generate insights HTML
                 container.innerHTML = `
                     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px;">
-                        <div style="background: #e8f5e9; padding: 20px; border-radius: 8px;">
-                            <h4 style="color: #2e7d32; margin-bottom: 10px;">
-                                <i class="fas fa-trophy"></i> Top Performer
-                            </h4>
-                            <p><strong>${topAgent?.name || 'Unknown'}</strong> has the highest answer rate at <strong>${topRate.toFixed(2)}%</strong></p>
+                        <div style="background: #e8f5e9; padding: 15px; border-radius: 6px;">
+                            <h4 style="color: #2e7d32; margin-bottom: 10px;"><i class="fas fa-trophy"></i> Top Performer</h4>
+                            <p><strong>${topPerformer.name}</strong> has the highest answer rate at <strong>${topRate}%</strong></p>
                             <p>Answered ${topPerformer.answered.toLocaleString()} of ${topPerformer.totalRings.toLocaleString()} calls</p>
-                            <p style="margin-top: 10px; font-size: 0.85rem;">
-                                <i class="fas fa-lightbulb"></i> Best practice: Share their techniques with the team
-                            </p>
                         </div>
                         
-                        <div style="background: #fff3e0; padding: 20px; border-radius: 8px;">
-                            <h4 style="color: #ef6c00; margin-bottom: 10px;">
-                                <i class="fas fa-exclamation-triangle"></i> Needs Attention
-                            </h4>
-                            <p><strong>${bottomAgent?.name || 'Unknown'}</strong> has the lowest answer rate at <strong>${bottomRate.toFixed(2)}%</strong></p>
+                        <div style="background: #fff3e0; padding: 15px; border-radius: 6px;">
+                            <h4 style="color: #ef6c00; margin-bottom: 10px;"><i class="fas fa-exclamation-triangle"></i> Needs Attention</h4>
+                            <p><strong>${bottomPerformer.name}</strong> has the lowest answer rate at <strong>${bottomRate}%</strong></p>
                             <p>Missed ${bottomPerformer.missed.toLocaleString()} calls (${((bottomPerformer.missed/bottomPerformer.totalRings)*100).toFixed(1)}% missed rate)</p>
-                            <p style="margin-top: 10px; font-size: 0.85rem;">
-                                <i class="fas fa-lightbulb"></i> Recommendation: Schedule coaching session
-                            </p>
                         </div>
                         
-                        <div style="background: #e3f2fd; padding: 20px; border-radius: 8px;">
-                            <h4 style="color: #1565c0; margin-bottom: 10px;">
-                                <i class="fas fa-chart-line"></i> Overall Performance
-                            </h4>
+                        <div style="background: #e3f2fd; padding: 15px; border-radius: 6px;">
+                            <h4 style="color: #1565c0; margin-bottom: 10px;"><i class="fas fa-dollar-sign"></i> Sales Champion</h4>
+                            <p><strong>${topSalesAgent.name}</strong> achieved <strong>${topAchievement}%</strong> of target</p>
+                            <p>Sales: $${topSalesAgent.sales.toLocaleString()} of $${topSalesAgent.target.toLocaleString()} target</p>
+                        </div>
+                        
+                        <div style="background: #f3e5f5; padding: 15px; border-radius: 6px;">
+                            <h4 style="color: #7b1fa2; margin-bottom: 10px;"><i class="fas fa-hand-holding-usd"></i> Upsell Master</h4>
+                            <p><strong>${topUpseller.name}</strong> has the highest upsell rate at <strong>${topUpsellRate}%</strong></p>
+                            <p>Generated $${topUpseller.upsellRevenue.toLocaleString()} in upsell revenue</p>
+                        </div>
+                        
+                        <div style="background: #e0f2f1; padding: 15px; border-radius: 6px;">
+                            <h4 style="color: #00695c; margin-bottom: 10px;"><i class="fas fa-chart-line"></i> Overall Performance</h4>
                             <p>Overall answer rate: <strong>${overallAnswerRate}%</strong></p>
-                            <p>Total calls handled: <strong>${totalCalls.toLocaleString()}</strong></p>
-                            <p>Successfully answered: <strong>${totalAnswered.toLocaleString()}</strong></p>
-                            <p style="margin-top: 10px; font-size: 0.85rem;">
-                                <i class="fas fa-lightbulb"></i> Target achievement: ${((overallAnswerRate / 45) * 100).toFixed(1)}%
-                            </p>
+                            <p>Overall achievement: <strong>${overallAchievement}%</strong></p>
+                            <p>Total upsell revenue: <strong>$${totalUpsellRevenue.toLocaleString()}</strong></p>
                         </div>
                     </div>
                 `;
             },
 
-            // Export Report
-            exportReport: function() {
-                const filteredData = this.getFilteredData();
+            // Period Management
+            setPeriod: function(period) {
+                this.currentPeriod = period;
                 
-                // Create export data
-                const exportData = filteredData.map(data => {
-                    const agent = this.agents.find(a => a.id === data.agentId);
-                    return {
-                        Agent: `${agent?.code} – ${agent?.name}`,
-                        'Total Rings': data.totalRings,
-                        'Answered': data.answered,
-                        'Missed': data.missed,
-                        'Avg Wait': data.avgWait,
-                        'Max Wait': data.maxWait,
-                        'Avg Talk': data.avgTalk,
-                        'Total Talk': data.totalTalk,
-                        'Answer Rate': `${data.answerRate.toFixed(2)}%`
-                    };
+                // Update period selector
+                document.querySelectorAll('.period-option').forEach(option => {
+                    option.classList.remove('active');
                 });
-
-                // Create worksheet
-                const worksheet = XLSX.utils.json_to_sheet(exportData);
-                const workbook = XLSX.utils.book_new();
-                XLSX.utils.book_append_sheet(workbook, worksheet, 'Agent Performance');
+                event.target.classList.add('active');
                 
-                // Add summary sheet
-                const summaryData = [
-                    ['Agent Performance Report'],
-                    [`Period: ${this.currentPeriod}`],
-                    [`Generated: ${new Date().toLocaleString()}`],
-                    [''],
-                    ['Summary Metrics'],
-                    ['Total Calls:', filteredData.reduce((sum, d) => sum + d.totalRings, 0)],
-                    ['Total Answered:', filteredData.reduce((sum, d) => sum + d.answered, 0)],
-                    ['Overall Answer Rate:', `${((filteredData.reduce((sum, d) => sum + d.answered, 0) / filteredData.reduce((sum, d) => sum + d.totalRings, 0) * 100) || 0).toFixed(2)}%`]
-                ];
+                // Update period info
+                const periodText = {
+                    '21-days': '21 Days - Jan 2026',
+                    'monthly': 'Monthly - Jan 2026',
+                    'custom': 'Custom Range - Select dates',
+                    'all': 'All Data - Complete History'
+                };
                 
-                const summarySheet = XLSX.utils.aoa_to_sheet(summaryData);
-                XLSX.utils.book_append_sheet(workbook, summarySheet, 'Summary');
+                document.getElementById('periodInfo').textContent = `Period: ${periodText[period]}`;
                 
-                // Save file
-                XLSX.writeFile(workbook, `agent_performance_${this.currentPeriod}_${new Date().toISOString().split('T')[0]}.xlsx`);
-                this.showToast('Report exported successfully!');
+                // Refresh data
+                this.renderAgentTable();
+                this.renderUpsellTable();
+                this.updateKPIs();
+                this.renderCharts();
             },
 
-            // Send Report
-            sendReport: function() {
-                this.showToast('Report sending feature would be integrated with email system');
-            },
+            // File Upload Handling
+            handleFileUpload: function(event) {
+                const file = event.target.files[0];
+                if (!file) return;
 
-            // Print Report
-            printReport: function() {
-                window.print();
-            },
+                this.showLoading(true);
 
-            // Filter by Date Range
-            filterByDateRange: function(start, end) {
-                console.log('Filtering by date range:', start.format('YYYY-MM-DD'), 'to', end.format('YYYY-MM-DD'));
-                // This would filter data by date range in a real implementation
-                this.showToast(`Filtering data from ${start.format('MMM D')} to ${end.format('MMM D')}`);
-            },
-
-            // Edit Agent
-            editAgent: function(agentId) {
-                const agent = this.agents.find(a => a.id === agentId);
-                if (agent) {
-                    this.showToast(`Editing ${agent.name}'s details`, 'info');
-                    // In a full implementation, this would open an agent edit modal
+                // Check file type
+                const fileName = file.name.toLowerCase();
+                if (!fileName.endsWith('.csv') && !fileName.endsWith('.xlsx') && !fileName.endsWith('.xls')) {
+                    this.showToast('Please upload only CSV or Excel files', 'error');
+                    this.showLoading(false);
+                    return;
                 }
+
+                // Process file
+                setTimeout(() => {
+                    this.processExcelFile(file);
+                }, 1000);
+            },
+
+            // Process Excel File
+            processExcelFile: function(file) {
+                // For demo purposes, we'll simulate processing
+                // In a real implementation, you would use a library like SheetJS
+                
+                this.showToast(`Processing ${file.name}...`, 'info');
+                
+                // Simulate successful processing
+                setTimeout(() => {
+                    this.showLoading(false);
+                    
+                    // Update with new data (in real implementation, parse the file)
+                    const newAgents = [
+                        {
+                            id: this.agents.length + 1,
+                            agentId: '208',
+                            name: 'New Agent',
+                            totalRings: 1500,
+                            answered: 800,
+                            missed: 700,
+                            avgWait: '0:06',
+                            maxWait: '1:45',
+                            avgTalk: '1:35',
+                            totalTalk: '21:15:00',
+                            orders: 120,
+                            sales: 15000,
+                            target: 18000,
+                            upsellAttempts: 150,
+                            upsellSuccess: 45,
+                            upsellRevenue: 1350,
+                            period: this.currentPeriod
+                        },
+                        ...this.agents
+                    ];
+                    
+                    this.agents = newAgents;
+                    this.renderAgentTable();
+                    this.renderUpsellTable();
+                    this.updateKPIs();
+                    this.renderCharts();
+                    
+                    this.showToast('File uploaded and processed successfully!', 'success');
+                    this.isDirty = true;
+                }, 2000);
+            },
+
+            // Download Template
+            downloadTemplate: function() {
+                const templateData = [
+                    ['Agent', 'Total_Rings', 'Answered', 'Missed', 'Avg_Wait', 'Max_Wait', 'Avg_Talk', 'Total_Talk', 'Orders', 'Sales', 'Target', 'Upsell_Attempts', 'Upsell_Success'],
+                    ['201 – Nirjala', '3061', '656', '2405', '0:08', '3:32', '1:28', '16:09:29', '125', '12500', '15000', '180', '45'],
+                    ['202 – Saleh Emad', '559', '144', '415', '0:04', '0:42', '1:32', '3:40:48', '78', '8900', '10000', '95', '20'],
+                    ['203 – Nona Rose', '2072', '1017', '1055', '0:07', '7:49', '1:44', '29:39:10', '156', '18200', '18000', '220', '65']
+                ];
+
+                let csvContent = templateData.map(row => row.join(',')).join('\n');
+                const blob = new Blob([csvContent], { type: 'text/csv' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'agent_performance_template.csv';
+                a.click();
+                URL.revokeObjectURL(url);
+                
+                this.showToast('Template downloaded successfully!');
+            },
+
+            // Finalize Report
+            finalizeReport: function() {
+                this.versionStatus = 'final';
+                this.updateVersionInfo();
+                this.showToast('Report finalized! Changes are now locked.', 'success');
+            },
+
+            // Update Version Info
+            updateVersionInfo: function() {
+                const statusElement = document.getElementById('versionStatus');
+                const infoElement = document.getElementById('versionInfo');
+                
+                if (this.versionStatus === 'draft') {
+                    statusElement.textContent = 'DRAFT';
+                    statusElement.className = 'version-badge version-draft';
+                    infoElement.textContent = `Last edited by Admin • ${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`;
+                } else {
+                    statusElement.textContent = 'FINAL';
+                    statusElement.className = 'version-badge version-final';
+                    infoElement.textContent = `Finalized by Admin • ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`;
+                }
+            },
+
+            // Save Changes
+            saveChanges: function() {
+                this.saveToStorage();
+                this.showToast('All changes saved successfully!', 'success');
+                this.isDirty = false;
+            },
+
+            // Reset Changes
+            resetChanges: function() {
+                if (confirm('Are you sure you want to reset all changes? This cannot be undone.')) {
+                    this.loadFromStorage();
+                    this.renderAgentTable();
+                    this.renderUpsellTable();
+                    this.updateKPIs();
+                    this.renderCharts();
+                    this.showToast('All changes have been reset.', 'info');
+                }
+            },
+
+            // Open Upload Modal
+            openUploadModal: function() {
+                document.getElementById('uploadModal').style.display = 'flex';
             },
 
             // Close Modal
             closeModal: function() {
-                document.querySelectorAll('.modal').forEach(modal => {
-                    modal.classList.remove('show');
-                });
+                document.getElementById('uploadModal').style.display = 'none';
+            },
+
+            // Process Uploaded File from Modal
+            processUploadedFile: function() {
+                const fileInput = document.getElementById('modalFileInput');
+                if (fileInput.files.length > 0) {
+                    this.handleFileUpload({ target: fileInput });
+                    this.closeModal();
+                } else {
+                    this.showToast('Please select a file first', 'error');
+                }
             },
 
             // Show Loading
@@ -2292,13 +2434,10 @@
                 toast.textContent = message;
                 toast.className = 'toast';
                 
-                // Set color based on type
                 if (type === 'error') {
                     toast.style.background = '#d32f2f';
                 } else if (type === 'info') {
                     toast.style.background = '#1976d2';
-                } else if (type === 'warning') {
-                    toast.style.background = '#f57c00';
                 } else {
                     toast.style.background = '#388e3c';
                 }
@@ -2310,20 +2449,42 @@
                 }, 3000);
             },
 
-            // Generate Colors
-            generateColors: function(count) {
-                const colors = [];
-                for (let i = 0; i < count; i++) {
-                    const hue = (i * 137.508) % 360; // Golden angle approximation
-                    colors.push(`hsla(${hue}, 70%, 65%, 0.7)`);
+            // Storage Management
+            saveToStorage: function() {
+                try {
+                    localStorage.setItem('agentPerformanceData', JSON.stringify({
+                        agents: this.agents,
+                        currentPeriod: this.currentPeriod,
+                        versionStatus: this.versionStatus,
+                        lastUpdated: new Date().toISOString()
+                    }));
+                } catch (e) {
+                    console.error('Error saving data:', e);
                 }
-                return colors;
+            },
+
+            loadFromStorage: function() {
+                try {
+                    const saved = localStorage.getItem('agentPerformanceData');
+                    if (saved) {
+                        const data = JSON.parse(saved);
+                        this.agents = data.agents || [];
+                        this.currentPeriod = data.currentPeriod || '21-days';
+                        this.versionStatus = data.versionStatus || 'draft';
+                    } else {
+                        // Load sample data if no saved data
+                        this.loadSampleData();
+                    }
+                } catch (e) {
+                    console.error('Error loading data:', e);
+                    this.loadSampleData();
+                }
             }
         };
 
-        // Initialize the system when page loads
+        // Initialize dashboard when page loads
         document.addEventListener('DOMContentLoaded', function() {
-            AgentSystem.init();
+            AgentDashboard.init();
         });
     </script>
 </body>
