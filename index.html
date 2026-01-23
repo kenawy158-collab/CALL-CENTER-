@@ -8,6 +8,7 @@
     <!-- External Libraries -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     
     <style>
         :root {
@@ -639,137 +640,77 @@
         /* Training Script Styles */
         .script-container {
             background: white;
-            padding: 40px;
+            padding: 30px;
             border-radius: 12px;
             box-shadow: var(--shadow);
-            max-width: 900px;
+            font-family: 'Georgia', serif;
+            line-height: 1.8;
+            max-width: 800px;
             margin: 0 auto;
         }
 
         .script-header {
             text-align: center;
-            margin-bottom: 40px;
+            margin-bottom: 30px;
             border-bottom: 2px solid var(--primary);
-            padding-bottom: 20px;
-        }
-        
-        .script-header h1 {
-            color: var(--primary);
-            margin-bottom: 10px;
+            padding-bottom: 15px;
         }
 
         .script-section {
-            margin-bottom: 40px;
+            margin-bottom: 25px;
             page-break-inside: avoid;
         }
 
-        .step-title {
+        .script-section h3 {
             color: var(--primary);
-            font-size: 1.4rem;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
         }
 
         .script-dialogue {
             background: #f8f9fa;
-            padding: 20px;
+            padding: 15px;
             border-radius: 8px;
-            margin-bottom: 20px;
+            margin-bottom: 10px;
             border-left: 4px solid var(--secondary);
-            font-family: 'Georgia', serif;
-            line-height: 1.6;
         }
 
         .script-agent {
             font-weight: bold;
             color: var(--info);
-            margin-bottom: 8px;
-            display: block;
         }
 
         .script-customer {
             font-style: italic;
             color: var(--text-muted);
-            margin-bottom: 8px;
-            display: block;
         }
 
-        /* Bilingual Support */
-        .arabic-note {
-            background: #fffbeb;
+        .script-note {
+            background: var(--warning-light);
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            margin-top: 10px;
+        }
+
+        .script-tips {
+            background: #e3f2fd;
             padding: 15px;
             border-radius: 8px;
-            border-right: 4px solid var(--secondary);
-            margin-bottom: 15px;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            font-size: 0.95rem;
-            color: #444;
-            line-height: 1.8;
-        }
-        
-        /* RTL specific overrides for Arabic text */
-        .arabic-text {
-            direction: rtl;
-            text-align: right;
-            font-family: 'Arial', sans-serif; /* Better for Arabic readability */
-        }
-
-        .training-note {
-            background: var(--warning-light);
-            padding: 15px;
-            border-radius: 6px;
-            font-size: 0.95rem;
-            color: #7d5700;
             margin-top: 15px;
-            border-left: 4px solid var(--warning);
         }
 
-        .training-note strong {
-            color: #bf360c;
-        }
-        
-        /* Target Table */
-        .target-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-            background: white;
-            font-size: 1rem;
-        }
-        
-        .target-table th {
-            background: var(--primary);
-            color: white;
-            padding: 12px;
-            text-align: left;
-        }
-        
-        .target-table td {
-            padding: 12px;
-            border: 1px solid #eee;
-            color: var(--text-main);
+        .script-tips h4 {
+            color: var(--info);
+            margin-bottom: 10px;
         }
 
-        .key-rules ul {
-            list-style: none;
-            padding: 0;
-        }
-        
-        .key-rules li {
-            padding: 10px;
-            border-bottom: 1px solid #eee;
-            font-size: 1rem;
-        }
-        
-        .key-rules li:last-child {
-            border-bottom: none;
+        .script-tips ul {
+            margin-left: 20px;
         }
 
-        .key-rules i {
-            color: var(--success);
-            margin-right: 10px;
+        .script-tips li {
+            margin-bottom: 5px;
         }
 
         /* Print Styles */
@@ -794,12 +735,16 @@
             .script-container {
                 box-shadow: none;
                 padding: 20px;
-                max-width: 100%;
+                margin: 0;
             }
             
             .script-dialogue {
                 background: white;
                 border: 1px solid #ddd;
+            }
+            
+            .script-section {
+                page-break-inside: avoid;
             }
         }
 
@@ -1111,196 +1056,361 @@
 
                     <div class="script-container">
                         <div class="script-header">
-                            <h1>Crispy Chicken – Standard Upsell Training Script</h1>
-                            <p>Customer Service & Sales Excellence</p>
+                            <h1>Crispy Chicken - Complete Upsell Training Script</h1>
+                            <p>Effective Upselling Techniques for Customer Service Excellence</p>
+                            <p style="font-size: 0.9rem; color: var(--text-muted);">Version 2.0 - Updated January 2026</p>
                         </div>
 
-                        <!-- Step 1 -->
                         <div class="script-section">
-                            <div class="step-title">1️⃣ Opening & Rapport Building (الافتتاح وبناء العلاقة)</div>
+                            <h3>1. Opening & Rapport Building</h3>
                             <div class="script-dialogue">
-                                <span class="script-agent">Agent:</span>
-                                “Thank you for calling Crispy Chicken. My name is [Agent Name]. How may I help you today?”
-                                <br><br>
-                                <span class="script-customer">Customer:</span>
-                                “I want to place a delivery order.”
-                                <br><br>
-                                <span class="script-agent">Agent:</span>
-                                “Absolutely! I’ll be happy to help. May I have your name, please?”
+                                <p class="script-agent">Agent: "Thank you for calling Crispy Chicken! My name is [Agent Name]. How can I help you today?"</p>
+                                <p class="script-customer">Customer: "I'd like to place an order for delivery."</p>
+                                <p class="script-agent">Agent: "Excellent choice! I'd be happy to help you with that. Before we proceed, may I know your name please?"</p>
+                                <p class="script-customer">Customer: "My name is Sarah."</p>
+                                <p class="script-agent">Agent: "Thank you, Sarah! It's great to have you with us today. What would you like to order?"</p>
                             </div>
-                            <div class="arabic-note arabic-text">
-                                📌 <strong>Training Note:</strong><br>
-                                استخدم اسم العميل مرة واحدة على الأقل<br>
-                                نبرة ودودة – لا تسرع الطلب
+                            <div class="script-note">
+                                <strong>Note:</strong> Always use the customer's name to personalize the conversation and build rapport. A warm greeting sets the tone for successful upselling.
                             </div>
-                        </div>
-
-                        <!-- Step 2 -->
-                        <div class="script-section">
-                            <div class="step-title">2️⃣ Order Taking & Automatic Upsell (أخذ الطلب + إضافة تلقائية)</div>
-                            <div class="script-dialogue">
-                                <span class="script-customer">Customer:</span>
-                                “I want a Crispy Chicken meal.”
-                                <br><br>
-                                <span class="script-agent">Agent:</span>
-                                “Great choice, [Customer Name] 👍<br>
-                                Would you like to make it a combo with French fries and a drink?”
-                            </div>
-                            <div class="arabic-note arabic-text">
-                                📌 <strong>قاعدة ذهبية:</strong><br>
-                                ❌ لا تسأل (هل تحب؟)<br>
-                                ✅ اعرض كأنه اختيار طبيعي
-                            </div>
-                        </div>
-
-                        <!-- Step 3 -->
-                        <div class="script-section">
-                            <div class="step-title">3️⃣ Size & Drink Upgrade (ترقية الحجم والمشروب)</div>
-                            <div class="script-dialogue">
-                                <span class="script-agent">Agent:</span>
-                                “Would you prefer Small or Large fries?”<br>
-                                “For drink, Pepsi, 7UP, or Mirinda?”
-                            </div>
-                            <div class="arabic-note arabic-text">
-                                📌 <strong>Training Note:</strong><br>
-                                العميل يختار من خيارين → نسبة قبول أعلى<br>
-                                لا تذكر السعر إلا إذا سُئلت
-                            </div>
-                        </div>
-
-                        <!-- Step 4 -->
-                        <div class="script-section">
-                            <div class="step-title">4️⃣ Sauce Upsell (أعلى ربح – أسهل بيع)</div>
-                            <div class="script-dialogue">
-                                <span class="script-agent">Agent:</span>
-                                “Would you like to add Dynamite Sauce or Garlic Sauce with your meal?”
-                            </div>
-                            <div class="training-note">
-                                📌 <strong>Standard Sauces المعتمدة:</strong>
+                            <div class="script-tips">
+                                <h4>Key Tips:</h4>
                                 <ul>
-                                    <li>Dynamite Sauce</li>
-                                    <li>Garlic Sauce</li>
-                                    <li>Hot Cheddar Cheese</li>
+                                    <li>Always sound enthusiastic and genuine</li>
+                                    <li>Use the customer's name at least 2-3 times naturally</li>
+                                    <li>Maintain a friendly, professional tone</li>
+                                    <li>Smile while talking - it comes through in your voice</li>
                                 </ul>
-                                <div class="arabic-note arabic-text" style="background:transparent; border:none; padding:0; margin-top:10px;">
-                                    🎯 <strong>هدف الصوص:</strong><br>
-                                    صوص واحد على الأقل في كل طلب
-                                </div>
                             </div>
                         </div>
 
-                        <!-- Step 5 -->
                         <div class="script-section">
-                            <div class="step-title">5️⃣ Side Item Upsell (إضافة خفيفة)</div>
+                            <h3>2. Order Taking & Opportunity Identification</h3>
                             <div class="script-dialogue">
-                                <span class="script-agent">Agent:</span>
-                                “Many customers enjoy adding Small Coleslaw with their meal. Shall I add one for you?”
+                                <p class="script-agent">Agent: "Great, Sarah! What would you like to order today?"</p>
+                                <p class="script-customer">Customer: "I'll have the crispy chicken burger meal."</p>
+                                <p class="script-agent">Agent: "Perfect choice! Our crispy chicken burger is one of our most popular items. Would you like to make it a large meal for just $2 more? You'll get more fries and a larger drink."</p>
+                                <p class="script-customer">Customer: "Sure, make it a large meal."</p>
+                                <p class="script-agent">Agent: "Excellent! While I have you, our new spicy chicken wings are on special today. Would you like to add a 6-piece order for just $5.99? They pair perfectly with your burger."</p>
                             </div>
-                            <div class="arabic-note arabic-text">
-                                📌 <strong>ملاحظة تدريبية:</strong><br>
-                                لا تعرض أكثر من Side واحد<br>
-                                البساطة = قبول أعلى
+                            <div class="script-note">
+                                <strong>Note:</strong> Identify upsell opportunities by suggesting size upgrades, add-ons, or complementary items. Always present the value proposition clearly.
+                            </div>
+                            <div class="script-tips">
+                                <h4>Identifying Upsell Opportunities:</h4>
+                                <ul>
+                                    <li>Listen for keywords like "just" or "only" - these indicate room for more</li>
+                                    <li>Consider the time of day (lunch vs. dinner)</li>
+                                    <li>Think about what pairs well with their order</li>
+                                    <li>Consider group size if mentioned</li>
+                                    <li>Look for seasonal or promotional items</li>
+                                </ul>
                             </div>
                         </div>
 
-                        <!-- Step 6 -->
                         <div class="script-section">
-                            <div class="step-title">6️⃣ Snack Upsell (للطلبات المتوسطة والكبيرة فقط)</div>
+                            <h3>3. Value Proposition Upsell</h3>
                             <div class="script-dialogue">
-                                <span class="script-agent">Agent:</span>
-                                “We also have 6 PCS Nuggets which go very well with meal. Would you like to add them today?”
+                                <p class="script-customer">Customer: "Hmm, I'm not sure about the wings."</p>
+                                <p class="script-agent">Agent: "I completely understand, Sarah. Many customers who try them come back specifically for the wings. They're crispy, flavorful, and today's special price saves you $2. Plus, they're perfect for sharing or saving for later."</p>
+                                <p class="script-customer">Customer: "That sounds good, but I'm trying to watch my budget."</p>
+                                <p class="script-agent">Agent: "I appreciate that, Sarah. Actually, our wings are quite filling - you get 6 pieces for $5.99, which is less than $1 per wing. And if you add them now, you'll qualify for our loyalty points - you'll earn 50 bonus points today!"</p>
                             </div>
-                            <div class="arabic-note arabic-text">
-                                📌 <strong>متى نعرضها؟</strong><br>
-                                إذا الطلب أكثر من وجبة<br>
-                                أو أكثر من شخص
+                            <div class="script-note">
+                                <strong>Note:</strong> Highlight value, popularity, and special offers. Handle objections with confidence and provide solutions that address the customer's concerns.
+                            </div>
+                            <div class="script-tips">
+                                <h4>Value Proposition Techniques:</h4>
+                                <ul>
+                                    <li>Break down the cost per item</li>
+                                    <li>Highlight savings or special pricing</li>
+                                    <li>Mention popularity ("most customers love...")</li>
+                                    <li>Emphasize quality and freshness</li>
+                                    <li>Connect to loyalty programs or rewards</li>
+                                </ul>
                             </div>
                         </div>
 
-                        <!-- Step 7 -->
                         <div class="script-section">
-                            <div class="step-title">7️⃣ Order Confirmation & Total (تأكيد الطلب)</div>
+                            <h3>4. Handling Common Objections</h3>
                             <div class="script-dialogue">
-                                <span class="script-agent">Agent:</span>
-                                “Perfect! Just to confirm your order:<br>
-                                Crispy Chicken meal with fries, drink, Dynamite sauce, and 6 PCS Nuggets.”<br><br>
-                                “Your total is [Amount]. Will this be delivery or pickup?”
+                                <p class="script-customer">Customer: "I'm on a diet."</p>
+                                <p class="script-agent">Agent: "I understand completely! We actually have some great grilled options and fresh salads. Our grilled chicken sandwich is only 320 calories and comes with a side salad. Would you like to try that instead?"</p>
+                                <p class="script-customer">Customer: "I don't have enough money."</p>
+                                <p class="script-agent">Agent: "I totally understand budget concerns. Actually, our value meals are designed to give you more for less. The large meal is only $2 more but you get 50% more food. Plus, if you download our app, you'll get 10% off your first order."</p>
+                                <p class="script-customer">Customer: "I'm in a hurry."</p>
+                                <p class="script-agent">Agent: "No problem at all! All our orders are prepared fresh and quickly. The wings actually cook faster than most items, so adding them won't delay your order at all. You'll have everything in about 15 minutes."</p>
                             </div>
-                            <div class="arabic-note arabic-text">
-                                📌 <strong>قاعدة أساسية:</strong><br>
-                                ✔ أكّد الطلب<br>
-                                ✔ ثم انتقل للدفع / التوصيل
+                            <div class="script-note">
+                                <strong>Note:</strong> Every objection is an opportunity to provide better service. Listen carefully, acknowledge the concern, and offer a solution.
+                            </div>
+                            <div class="script-tips">
+                                <h4>Common Objections & Responses:</h4>
+                                <ul>
+                                    <li><strong>"Too expensive"</strong> → Break down value, mention savings</li>
+                                    <li><strong>"Not hungry"</strong> → Suggest smaller portions, save for later</li>
+                                    <li><strong>"Don't like that item"</strong> → Offer alternatives, describe benefits</li>
+                                    <li><strong>"Already have enough"</strong> → Mention sharing, future meals</li>
+                                    <li><strong>"Tried before, didn't like"</strong> → Mention improvements, new recipe</li>
+                                </ul>
                             </div>
                         </div>
 
-                        <!-- Step 8 -->
                         <div class="script-section">
-                            <div class="step-title">8️⃣ Final Upsell (الفرصة الأخيرة – بدون إلحاح)</div>
+                            <h3>5. Closing & Confirmation</h3>
                             <div class="script-dialogue">
-                                <span class="script-agent">Agent:</span>
-                                “Before we finalize, would you like to add extra fries or an extra drink for sharing?”
+                                <p class="script-customer">Customer: "Okay, I'll try the wings."</p>
+                                <p class="script-agent">Agent: "Great choice, Sarah! You won't regret it. So I have you down for one large crispy chicken burger meal and a 6-piece order of our spicy wings. Your total comes to $18.99. Will this be for delivery or pickup?"</p>
+                                <p class="script-customer">Customer: "Delivery please."</p>
+                                <p class="script-agent">Agent: "Perfect! Can I get your delivery address?"</p>
+                                <p class="script-customer">Customer: "[Provides address]"</p>
+                                <p class="script-agent">Agent: "Thank you! Your order will be ready in approximately 25 minutes. Is there anything else I can help you with today?"</p>
                             </div>
-                            <div class="arabic-note arabic-text">
-                                📌 <strong>إذا رفض العميل:</strong><br>
-                                ابتسم صوتيًا<br>
-                                انتقل فورًا للختام
+                            <div class="script-note">
+                                <strong>Note:</strong> Always confirm the complete order and provide the total before proceeding to payment/delivery details. End on a positive note.
+                            </div>
+                            <div class="script-tips">
+                                <h4>Effective Closing Techniques:</h4>
+                                <ul>
+                                    <li>Repeat the entire order for accuracy</li>
+                                    <li>Provide the total clearly</li>
+                                    <li>Give an accurate time estimate</li>
+                                    <li>Ask if there's anything else needed</li>
+                                    <li>Thank them sincerely for their business</li>
+                                </ul>
                             </div>
                         </div>
 
-                        <!-- Step 9 -->
                         <div class="script-section">
-                            <div class="step-title">9️⃣ Closing (الختام الاحترافي)</div>
+                            <h3>6. Final Upsell Opportunity</h3>
                             <div class="script-dialogue">
-                                <span class="script-agent">Agent:</span>
-                                “Thank you [Customer Name] for choosing Crispy Chicken.<br>
-                                Your order will arrive in approximately [Time] minutes.<br>
-                                Enjoy your meal!”
+                                <p class="script-agent">Agent: "Perfect! Just to let you know, Sarah, if you add our signature chocolate lava cake for $4.99, you'll qualify for free delivery on orders over $20. Would you like to add the cake and save on delivery?"</p>
+                                <p class="script-customer">Customer: "That sounds good, add the cake."</p>
+                                <p class="script-agent">Agent: "Excellent! Your new total is $23.98 with free delivery. You've made some great choices today! Your order will be ready in approximately 25 minutes. Thank you for choosing Crispy Chicken!"</p>
+                            </div>
+                            <div class="script-note">
+                                <strong>Note:</strong> Use final upsell opportunities to provide additional value to the customer, such as free delivery or special combo deals.
+                            </div>
+                            <div class="script-tips">
+                                <h4>Final Upsell Strategies:</h4>
+                                <ul>
+                                    <li>Offer free delivery threshold upgrades</li>
+                                    <li>Suggest desserts or drinks</li>
+                                    <li>Mention limited-time offers</li>
+                                    <li>Bundle deals for future savings</li>
+                                    <li>Seasonal or promotional items</li>
+                                </ul>
                             </div>
                         </div>
 
-                        <!-- Targets -->
                         <div class="script-section">
-                            <div class="step-title">🎯 Upsell Targets – Training Standard</div>
-                            <table class="target-table">
-                                <thead>
-                                    <tr>
-                                        <th>Item</th>
-                                        <th>Target</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>Fries + Drink</td>
-                                        <td>80% of orders</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Sauce</td>
-                                        <td>70%</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Side / Snack</td>
-                                        <td>40%</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Average Order Value</td>
-                                        <td>+8% to +12%</td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                            <h3>7. Advanced Upsell Techniques</h3>
+                            <div class="script-dialogue">
+                                <p class="script-agent">Agent: "I notice you're ordering for your family. Our family meal deal feeds 4-5 people and includes 2 large burgers, 20 wings, 4 large fries, and a 2-liter soda for only $39.99. That's a savings of over $10 compared to ordering individually!"</p>
+                                <p class="script-customer">Customer: "That's a great deal! Let's do that instead."</p>
+                                <p class="script-agent">Agent: "Perfect choice! Since you're getting the family meal, would you like to add our party pack of dipping sauces for just $2.99? It includes all 6 of our signature sauces."</p>
+                            </div>
+                            <div class="script-note">
+                                <strong>Note:</strong> Advanced techniques involve recognizing patterns and offering comprehensive solutions that provide maximum value.
+                            </div>
+                            <div class="script-tips">
+                                <h4>Advanced Techniques:</h4>
+                                <ul>
+                                    <li><strong>Bundle Upselling</strong> - Combine multiple items for better value</li>
+                                    <li><strong>Cross-Selling</strong> - Suggest complementary products</li>
+                                    <li><strong>Upgrade Upselling</strong> - Move to premium versions</li>
+                                    <li><strong>Quantity Upselling</strong> - "Buy more, save more"</li>
+                                    <li><strong>Service Upselling</strong> - Add premium services</li>
+                                </ul>
+                            </div>
                         </div>
 
-                        <!-- Key Rules -->
-                        <div class="script-section key-rules">
-                            <div class="step-title">🔑 Key Rules for Agents</div>
-                            <ul>
-                                <li><i class="fas fa-check"></i> <strong>Offer</strong> – don’t ask</li>
-                                <li><i class="fas fa-check"></i> <strong>One upsell</strong> at a time</li>
-                                <li><i class="fas fa-check"></i> <strong>Confident & friendly</strong> tone</li>
-                                <li><i class="fas fa-check"></i> <strong>Never argue</strong> with customer</li>
-                                <li><i class="fas fa-check"></i> <strong>Upsell = خدمة أفضل، مش ضغط</strong> (Better service, not pressure)</li>
-                            </ul>
+                        <div class="script-section">
+                            <h3>8. Product Knowledge Essentials</h3>
+                            <div class="script-tips">
+                                <h4>Must-Know Product Information:</h4>
+                                <ul>
+                                    <li><strong>All Burgers:</strong> Made with 100% fresh chicken, never frozen</li>
+                                    <li><strong>Spicy Items:</strong> Heat levels from mild to extra hot</li>
+                                    <li><strong>Sides:</strong> Fresh-cut fries, coleslaw, mac & cheese, onion rings</li>
+                                    <li><strong>Dipping Sauces:</strong> BBQ, ranch, honey mustard, buffalo, garlic aioli, sweet chili</li>
+                                    <li><strong>Drinks:</strong> Fountain drinks, fresh lemonade, iced tea, milkshakes</li>
+                                    <li><strong>Desserts:</strong> Chocolate lava cake, apple pie, ice cream</li>
+                                </ul>
+                            </div>
+                            <div class="script-tips">
+                                <h4>Nutritional Information:</h4>
+                                <ul>
+                                    <li>Grilled options under 400 calories</li>
+                                    <li>Gluten-free buns available</li>
+                                    <li>Vegetarian options available</li>
+                                    <li>Allergen information available upon request</li>
+                                </ul>
+                            </div>
                         </div>
 
+                        <div class="script-section">
+                            <h3>9. Building Customer Loyalty</h3>
+                            <div class="script-dialogue">
+                                <p class="script-agent">Agent: "Sarah, have you joined our Crispy Rewards program yet? You earn points with every order and get exclusive deals. I can sign you up right now and you'll get 100 bonus points just for joining!"</p>
+                                <p class="script-customer">Customer: "No, I haven't. That sounds great!"</p>
+                                <p class="script-agent">Agent: "Perfect! I just need your phone number and email. You'll get a free dessert on your next order too!"</p>
+                            </div>
+                            <div class="script-note">
+                                <strong>Note:</strong> Building long-term customer relationships is more valuable than single upsells. Loyalty programs encourage repeat business.
+                            </div>
+                            <div class="script-tips">
+                                <h4>Loyalty Building Tips:</h4>
+                                <ul>
+                                    <li>Always mention the rewards program</li>
+                                    <li>Remember regular customers' preferences</li>
+                                    <li>Personalize recommendations based on past orders</li>
+                                    <li>Follow up on previous experiences</li>
+                                    <li>Create memorable experiences</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="script-section">
+                            <h3>10. Key Upselling Principles</h3>
+                            <div class="script-tips">
+                                <h4>Core Principles:</h4>
+                                <ul>
+                                    <li><strong>Listen Actively:</strong> Pay attention to customer preferences and needs</li>
+                                    <li><strong>Be Genuine:</strong> Recommend items you truly believe in</li>
+                                    <li><strong>Focus on Value:</strong> Explain benefits, not just features</li>
+                                    <li><strong>Timing is Key:</strong> Introduce upsells at natural conversation points</li>
+                                    <li><strong>Handle Objections:</strong> Acknowledge concerns and provide solutions</li>
+                                    <li><strong>Know Your Products:</strong> Be prepared to answer questions about menu items</li>
+                                    <li><strong>Create Urgency:</strong> Mention limited-time offers or specials</li>
+                                    <li><strong>Be Confident:</strong> Your enthusiasm is contagious</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="script-section">
+                            <h3>11. Performance Metrics & Goals</h3>
+                            <div class="script-tips">
+                                <h4>Success Metrics:</h4>
+                                <ul>
+                                    <li>Upsell attempt rate: Aim for 80% of orders</li>
+                                    <li>Upsell success rate: Target 30-40%</li>
+                                    <li>Average order value increase: Goal 15-20%</li>
+                                    <li>Customer satisfaction: Maintain 4.5+ stars</li>
+                                    <li>Repeat customer rate: Increase by 10% monthly</li>
+                                </ul>
+                            </div>
+                            <div class="script-tips">
+                                <h4>Daily Goals:</h4>
+                                <ul>
+                                    <li>Attempt upsells on every eligible order</li>
+                                    <li>Learn one new product feature daily</li>
+                                    <li>Practice objection handling techniques</li>
+                                    <li>Review successful upsell scenarios</li>
+                                    <li>Share best practices with team members</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="script-section">
+                            <h3>12. Common Mistakes to Avoid</h3>
+                            <div class="script-tips">
+                                <h4>Don't Make These Mistakes:</h4>
+                                <ul>
+                                    <li><strong>Being Pushy:</strong> Never pressure customers</li>
+                                    <li><strong>Ignoring Cues:</strong> Pay attention to customer responses</li>
+                                    <li><strong>Not Listening:</strong> Hear what customers actually want</li>
+                                    <li><strong>Lack of Product Knowledge:</strong> Know your menu inside out</li>
+                                    <li><strong>Poor Timing:</strong> Don't interrupt or rush</li>
+                                    <li><strong>Negative Language:</strong> Avoid "no problem" - use "my pleasure"</li>
+                                    <li><strong>Making Assumptions:</strong> Ask questions instead</li>
+                                    <li><strong>Forgetting to Thank:</strong> Always show appreciation</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="script-section">
+                            <h3>13. Role-Play Scenarios</h3>
+                            <div class="script-dialogue">
+                                <p class="script-agent">Agent: "Thank you for calling Crispy Chicken! My name is [Agent Name]. How can I help you today?"</p>
+                                <p class="script-customer">Customer: "I want to order a single crispy chicken sandwich."</p>
+                                <p class="script-agent">Agent: "Great choice! Would you like to make it a combo with fries and a drink for just $3 more?"</p>
+                                <p class="script-customer">Customer: "No, just the sandwich."</p>
+                                <p class="script-agent">Agent: "No problem! Our sandwiches come with pickles and our special sauce. Would you like to add cheese for just $0.50?"</p>
+                                <p class="script-customer">Customer: "Sure, add cheese."</p>
+                                <p class="script-agent">Agent: "Perfect! Anything else for you today?"</p>
+                            </div>
+                            <div class="script-note">
+                                <strong>Practice Scenario:</strong> Work through this scenario with a partner, then switch roles. Focus on natural flow and value presentation.
+                            </div>
+                        </div>
+
+                        <div class="script-section">
+                            <h3>14. Quick Reference Guide</h3>
+                            <div class="script-tips">
+                                <h4>Upsell Flow Chart:</h4>
+                                <ul>
+                                    <li>1. Greet warmly + get name</li>
+                                    <li>2. Take initial order</li>
+                                    <li>3. Suggest size upgrade</li>
+                                    <li>4. Recommend add-ons</li>
+                                    <li>5. Handle objections</li>
+                                    <li>6. Final upsell opportunity</li>
+                                    <li>7. Confirm order</li>
+                                    <li>8. Thank and close</li>
+                                </ul>
+                            </div>
+                            <div class="script-tips">
+                                <h4>Magic Phrases:</h4>
+                                <ul>
+                                    <li>"Would you like to make it a large for just $X more?"</li>
+                                    <li>"Many customers love..."</li>
+                                    <li>"For just $X more, you get..."</li>
+                                    <li>"Have you tried our new...?"</li>
+                                    <li>"Perfect pairing with that is..."</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="script-section">
+                            <h3>15. Continuous Improvement</h3>
+                            <div class="script-tips">
+                                <h4>Daily Improvement Activities:</h4>
+                                <ul>
+                                    <li>Review your calls - what worked, what didn't?</li>
+                                    <li>Learn from top performers</li>
+                                    <li>Practice with team members</li>
+                                    <li>Stay updated on new products and promotions</li>
+                                    <li>Set personal improvement goals</li>
+                                    <li>Ask for feedback from supervisors</li>
+                                    <li>Read customer reviews and comments</li>
+                                    <li>Attend all training sessions</li>
+                                </ul>
+                            </div>
+                            <div class="script-note">
+                                <strong>Remember:</strong> Excellence in upselling comes from practice, persistence, and genuinely wanting to provide the best customer experience.
+                            </div>
+                        </div>
+
+                        <div class="script-section">
+                            <h3>16. Certification Checklist</h3>
+                            <div class="script-tips">
+                                <h4>Skills to Master:</h4>
+                                <ul>
+                                    <li>☐ Greeting and rapport building</li>
+                                    <li>☐ Identifying upsell opportunities</li>
+                                    <li>☐ Presenting value propositions</li>
+                                    <li>☐ Handling common objections</li>
+                                    <li>☐ Product knowledge</li>
+                                    <li>☐ Closing techniques</li>
+                                    <li>☐ Building customer loyalty</li>
+                                    <li>☐ Meeting performance metrics</li>
+                                </ul>
+                            </div>
+                            <div class="script-note">
+                                <strong>Certification Requirements:</strong> Complete all training modules, achieve 80% on knowledge test, and maintain 30% upsell success rate for 30 days.
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -1357,6 +1467,49 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- History View -->
+                <div id="view-history" class="view">
+                    <div class="card">
+                        <h3>Report History</h3>
+                        <div class="table-wrapper">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Period</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="historyTableBody">
+                                    <!-- Data loaded dynamically -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Settings View -->
+                <div id="view-settings" class="view">
+                    <div class="card">
+                        <h3>Dashboard Settings</h3>
+                        <div class="form-group">
+                            <label for="autoSaveInterval">Auto-save Interval (seconds)</label>
+                            <input type="number" id="autoSaveInterval" class="form-control" value="5" min="1" max="60">
+                        </div>
+                        <div class="form-group">
+                            <label for="defaultPeriod">Default Period</label>
+                            <select id="defaultPeriod" class="form-control">
+                                <option value="21-days">21 Days</option>
+                                <option value="monthly">Monthly</option>
+                                <option value="custom">Custom Range</option>
+                                <option value="all">All Data</option>
+                            </select>
+                        </div>
+                        <button class="btn btn-primary" onclick="AgentDashboard.saveSettings()">Save Settings</button>
+                    </div>
+                </div>
             </div>
         </main>
     </div>
@@ -1394,22 +1547,25 @@
             chart: null,
             analyticsChart: null,
             upsellChart: null,
+            autoSaveTimer: null,
 
             // Initialize
             init: function() {
                 this.loadFromStorage();
+                this.loadSettings();
                 this.setupEventListeners();
                 this.renderAgentTable();
                 this.renderUpsellTable();
                 this.updateKPIs();
                 this.renderCharts();
                 this.updateVersionInfo();
+                this.renderHistory();
             },
 
             // Setup Event Listeners
             setupEventListeners: function() {
                 // Auto-save on changes
-                setInterval(() => {
+                this.autoSaveTimer = setInterval(() => {
                     if (this.isDirty) {
                         this.saveToStorage();
                         this.isDirty = false;
@@ -1418,28 +1574,30 @@
 
                 // Drag and drop for upload
                 const uploadArea = document.getElementById('uploadArea');
-                uploadArea.addEventListener('dragover', (e) => {
-                    e.preventDefault();
-                    uploadArea.style.borderColor = 'var(--primary)';
-                    uploadArea.style.background = '#f0f8ff';
-                });
+                if (uploadArea) {
+                    uploadArea.addEventListener('dragover', (e) => {
+                        e.preventDefault();
+                        uploadArea.style.borderColor = 'var(--primary)';
+                        uploadArea.style.background = '#f0f8ff';
+                    });
 
-                uploadArea.addEventListener('dragleave', (e) => {
-                    e.preventDefault();
-                    uploadArea.style.borderColor = 'var(--border)';
-                    uploadArea.style.background = 'white';
-                });
+                    uploadArea.addEventListener('dragleave', (e) => {
+                        e.preventDefault();
+                        uploadArea.style.borderColor = 'var(--border)';
+                        uploadArea.style.background = 'white';
+                    });
 
-                uploadArea.addEventListener('drop', (e) => {
-                    e.preventDefault();
-                    uploadArea.style.borderColor = 'var(--border)';
-                    uploadArea.style.background = 'white';
-                    
-                    const files = e.dataTransfer.files;
-                    if (files.length > 0) {
-                        this.handleFileUpload({ target: { files: files } });
-                    }
-                });
+                    uploadArea.addEventListener('drop', (e) => {
+                        e.preventDefault();
+                        uploadArea.style.borderColor = 'var(--border)';
+                        uploadArea.style.background = 'white';
+                        
+                        const files = e.dataTransfer.files;
+                        if (files.length > 0) {
+                            this.handleFileUpload({ target: { files: files } });
+                        }
+                    });
+                }
             },
 
             // View Management
@@ -1475,6 +1633,8 @@
                     this.renderAnalytics();
                 } else if (view === 'upsell') {
                     this.renderUpsellChart();
+                } else if (view === 'history') {
+                    this.renderHistory();
                 }
             },
 
@@ -1761,6 +1921,41 @@
                 if (upsellRate >= 35) return 'high';
                 if (upsellRate >= 25) return 'medium';
                 return 'low';
+            },
+
+            // Parse Time to Seconds
+            parseTimeToSeconds: function(timeStr) {
+                if (!timeStr) return 0;
+                
+                const parts = timeStr.split(':').map(Number);
+                
+                if (parts.length === 1) {
+                    // Just seconds
+                    return parts[0] || 0;
+                } else if (parts.length === 2) {
+                    // Minutes:Seconds
+                    return (parts[0] * 60) + (parts[1] || 0);
+                } else if (parts.length === 3) {
+                    // Hours:Minutes:Seconds
+                    return (parts[0] * 3600) + (parts[1] * 60) + (parts[2] || 0);
+                }
+                
+                return 0;
+            },
+
+            // Seconds to Time String
+            secondsToTimeString: function(seconds) {
+                if (!seconds || seconds <= 0) return '0:00';
+                
+                const hours = Math.floor(seconds / 3600);
+                const minutes = Math.floor((seconds % 3600) / 60);
+                const secs = Math.floor(seconds % 60);
+                
+                if (hours > 0) {
+                    return `${hours}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+                } else {
+                    return `${minutes}:${secs.toString().padStart(2, '0')}`;
+                }
             },
 
             // Render Agent Table
@@ -2072,7 +2267,10 @@
             // Render Charts
             renderCharts: function() {
                 const ctx = document.getElementById('performanceChart');
-                if (!ctx) return;
+                if (!ctx) {
+                    console.warn('Performance chart canvas not found');
+                    return;
+                }
 
                 const filteredAgents = this.agents.filter(agent => 
                     this.currentPeriod === 'all' || agent.period === this.currentPeriod
@@ -2171,7 +2369,10 @@
             // Render Upsell Chart
             renderUpsellChart: function() {
                 const ctx = document.getElementById('upsellChart');
-                if (!ctx) return;
+                if (!ctx) {
+                    console.warn('Upsell chart canvas not found');
+                    return;
+                }
 
                 const filteredAgents = this.agents.filter(agent => 
                     this.currentPeriod === 'all' || agent.period === this.currentPeriod
@@ -2258,7 +2459,10 @@
             // Render Analytics
             renderAnalytics: function() {
                 const ctx = document.getElementById('analyticsChart');
-                if (!ctx) return;
+                if (!ctx) {
+                    console.warn('Analytics chart canvas not found');
+                    return;
+                }
 
                 // Destroy existing chart
                 if (this.analyticsChart) {
@@ -2480,55 +2684,91 @@
                 }
 
                 // Process file
-                setTimeout(() => {
-                    this.processExcelFile(file);
-                }, 1000);
+                this.processExcelFile(file);
             },
 
             // Process Excel File
             processExcelFile: function(file) {
-                // For demo purposes, we'll simulate processing
-                // In a real implementation, you would use a library like SheetJS
+                const reader = new FileReader();
                 
-                this.showToast(`Processing ${file.name}...`, 'info');
+                reader.onload = (e) => {
+                    try {
+                        const data = new Uint8Array(e.target.result);
+                        const workbook = XLSX.read(data, { type: 'array' });
+                        const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+                        const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+                        
+                        this.processUploadedData(jsonData);
+                    } catch (error) {
+                        console.error('Error reading file:', error);
+                        this.showToast('Error reading file. Please check the format.', 'error');
+                        this.showLoading(false);
+                    }
+                };
                 
-                // Simulate successful processing
-                setTimeout(() => {
-                    this.showLoading(false);
+                reader.readAsArrayBuffer(file);
+            },
+
+            // Process Uploaded Data
+            processUploadedData: function(data) {
+                try {
+                    // Skip header row
+                    const rows = data.slice(1);
                     
-                    // Update with new data (in real implementation, parse the file)
-                    const newAgents = [
-                        {
-                            id: this.agents.length + 1,
-                            agentId: '208',
-                            name: 'New Agent',
-                            totalRings: 1500,
-                            answered: 800,
-                            missed: 700,
-                            avgWait: '0:06',
-                            maxWait: '1:45',
-                            avgTalk: '1:35',
-                            totalTalk: '21:15:00',
-                            orders: 120,
-                            sales: 15000,
-                            target: 18000,
-                            upsellAttempts: 150,
-                            upsellSuccess: 45,
-                            upsellRevenue: 1350,
-                            period: this.currentPeriod
-                        },
-                        ...this.agents
-                    ];
+                    rows.forEach((row, index) => {
+                        if (row.length >= 13) {
+                            const agentStr = row[0]?.toString() || '';
+                            const agentMatch = agentStr.match(/(\d+)\s*–\s*(.+)/);
+                            
+                            if (agentMatch) {
+                                const agentCode = agentMatch[1];
+                                const agentName = agentMatch[2].trim();
+                                
+                                // Find or create agent
+                                let agent = this.agents.find(a => a.agentId === agentCode);
+                                if (!agent) {
+                                    agent = {
+                                        id: this.agents.length + 1,
+                                        agentId: agentCode,
+                                        name: agentName,
+                                        period: this.currentPeriod
+                                    };
+                                    this.agents.push(agent);
+                                }
+                                
+                                // Update agent data
+                                agent.totalRings = parseInt(row[1]) || 0;
+                                agent.answered = parseInt(row[2]) || 0;
+                                agent.missed = parseInt(row[3]) || 0;
+                                agent.avgWait = row[4]?.toString() || '0:00';
+                                agent.maxWait = row[5]?.toString() || '0:00';
+                                agent.avgTalk = row[6]?.toString() || '0:00';
+                                agent.totalTalk = row[7]?.toString() || '0:00:00';
+                                agent.orders = parseInt(row[8]) || 0;
+                                agent.sales = parseFloat(row[9]) || 0;
+                                agent.target = parseFloat(row[10]) || 0;
+                                agent.upsellAttempts = parseInt(row[11]) || 0;
+                                agent.upsellSuccess = parseInt(row[12]) || 0;
+                                
+                                // Calculate derived values
+                                agent.upsellRevenue = agent.upsellSuccess * 30; // Average of $30 per successful upsell
+                            }
+                        }
+                    });
                     
-                    this.agents = newAgents;
+                    this.saveToStorage();
                     this.renderAgentTable();
                     this.renderUpsellTable();
                     this.updateKPIs();
                     this.renderCharts();
+                    this.showLoading(false);
+                    this.showToast(`Successfully uploaded ${rows.length} records!`, 'success');
                     
-                    this.showToast('File uploaded and processed successfully!', 'success');
-                    this.isDirty = true;
-                }, 2000);
+                } catch (error) {
+                    console.error('Error processing data:', error);
+                    this.showLoading(false);
+                    this.showToast('Error processing file data. Please check the format.', 'error');
+                }
             },
 
             // Download Template
@@ -2556,6 +2796,23 @@
             finalizeReport: function() {
                 this.versionStatus = 'final';
                 this.updateVersionInfo();
+                
+                // Add to history
+                try {
+                    const history = JSON.parse(localStorage.getItem('reportHistory')) || [];
+                    history.push({
+                        id: 'report_' + Date.now(),
+                        date: new Date().toISOString(),
+                        period: this.currentPeriod,
+                        status: 'final',
+                        data: this.agents
+                    });
+                    localStorage.setItem('reportHistory', JSON.stringify(history));
+                } catch (error) {
+                    console.error('Error saving to history:', error);
+                }
+                
+                this.saveToStorage();
                 this.showToast('Report finalized! Changes are now locked.', 'success');
             },
 
@@ -2655,8 +2912,10 @@
                         versionStatus: this.versionStatus,
                         lastUpdated: new Date().toISOString()
                     }));
+                    console.log('Data saved to storage');
                 } catch (e) {
                     console.error('Error saving data:', e);
+                    this.showToast('Error saving data: ' + e.message, 'error');
                 }
             },
 
@@ -2674,8 +2933,113 @@
                     }
                 } catch (e) {
                     console.error('Error loading data:', e);
+                    this.showToast('Error loading data: ' + e.message, 'error');
                     this.loadSampleData();
                 }
+            },
+
+            // Settings Management
+            saveSettings: function() {
+                const autoSaveInterval = document.getElementById('autoSaveInterval').value;
+                const defaultPeriod = document.getElementById('defaultPeriod').value;
+                
+                // Save settings to localStorage
+                localStorage.setItem('dashboardSettings', JSON.stringify({
+                    autoSaveInterval: autoSaveInterval,
+                    defaultPeriod: defaultPeriod
+                }));
+                
+                // Update auto-save interval
+                if (this.autoSaveTimer) {
+                    clearInterval(this.autoSaveTimer);
+                }
+                
+                this.autoSaveTimer = setInterval(() => {
+                    if (this.isDirty) {
+                        this.saveToStorage();
+                        this.isDirty = false;
+                    }
+                }, autoSaveInterval * 1000);
+                
+                this.showToast('Settings saved successfully!');
+            },
+
+            loadSettings: function() {
+                try {
+                    const settings = JSON.parse(localStorage.getItem('dashboardSettings'));
+                    if (settings) {
+                        document.getElementById('autoSaveInterval').value = settings.autoSaveInterval || 5;
+                        document.getElementById('defaultPeriod').value = settings.defaultPeriod || '21-days';
+                        
+                        // Update auto-save interval
+                        if (this.autoSaveTimer) {
+                            clearInterval(this.autoSaveTimer);
+                        }
+                        
+                        this.autoSaveTimer = setInterval(() => {
+                            if (this.isDirty) {
+                                this.saveToStorage();
+                                this.isDirty = false;
+                            }
+                        }, settings.autoSaveInterval * 1000 || 5000);
+                    }
+                } catch (error) {
+                    console.error('Error loading settings:', error);
+                }
+            },
+
+            // Render History
+            renderHistory: function() {
+                const tbody = document.getElementById('historyTableBody');
+                if (!tbody) return;
+                
+                // Load history from localStorage
+                try {
+                    const history = JSON.parse(localStorage.getItem('reportHistory')) || [];
+                    
+                    if (history.length === 0) {
+                        tbody.innerHTML = `
+                            <tr>
+                                <td colspan="4" style="padding: 40px; text-align: center; color: var(--text-muted);">
+                                    No report history available
+                                </td>
+                            </tr>
+                        `;
+                        return;
+                    }
+                    
+                    tbody.innerHTML = history.map(report => `
+                        <tr>
+                            <td>${new Date(report.date).toLocaleDateString()}</td>
+                            <td>${report.period}</td>
+                            <td>
+                                <span class="version-badge version-${report.status}">
+                                    ${report.status.toUpperCase()}
+                                </span>
+                            </td>
+                            <td>
+                                <button class="btn btn-sm btn-secondary" onclick="AgentDashboard.viewReport('${report.id}')">
+                                    View
+                                </button>
+                            </td>
+                        </tr>
+                    `).join('');
+                } catch (error) {
+                    console.error('Error loading history:', error);
+                    tbody.innerHTML = `
+                        <tr>
+                            <td colspan="4" style="padding: 40px; text-align: center; color: var(--text-muted);">
+                                Error loading report history
+                            </td>
+                        </tr>
+                    `;
+                }
+            },
+
+            // View Report
+            viewReport: function(reportId) {
+                // In a full implementation, this would load and display the specific report
+                this.showToast(`Viewing report ${reportId}`);
             }
         };
 
